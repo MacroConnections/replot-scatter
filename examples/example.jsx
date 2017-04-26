@@ -199,7 +199,7 @@ class ExampleApp extends React.Component {
         <div style={{width:"70%", float:"right"}}>
           <ScatterPlot data={this.state.data}
             titleKey="continent" xKey="population" yKey="gdp"
-            scale={this.state.scale} color={this.state.color}/>
+            scale={this.state.scale} grid={"off"} color={this.state.color}/>
         </div>
       </div>
     )
