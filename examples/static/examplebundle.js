@@ -23355,7 +23355,7 @@ class CircleSizing {
     this.data = data
     this.circleKey = circleKey
     this.maxRadius = 8
-    this.data.sort((a, b) => a[this.circleKey] - b[this.circleKey])
+    this.data.sort((a, b) => b[this.circleKey] - a[this.circleKey])
     this.largestWeight = this.data[0][this.circleKey]
   }
 
@@ -23365,6 +23365,7 @@ class CircleSizing {
     //decrease the radius proportionally
     let newData = []
     let radius
+    console.log(this.data)
     if (this.circleKey == "default") {
       for (let member of this.data) {
         radius = 2.5
@@ -23377,7 +23378,7 @@ class CircleSizing {
         if (member[this.circleKey] === this.largestWeight) {
           radius = this.maxRadius
         } else {
-          let ratio = this.largestWeight/(member[this.circleKey])
+          let ratio =(member[this.circleKey])/ this.largestWeight
 
           radius = this.maxRadius * ratio
         }
