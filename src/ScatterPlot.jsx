@@ -4,6 +4,7 @@ import Axis from "./Axis.jsx"
 import Legend from "./Legend.jsx"
 import Color from "./Color.js"
 import ColorPalette from "./ColorPalette.js"
+import CircleSizing from "./CircleSizing.js"
 
 const defPalette = ["#4cab92", "#ca0004", "#003953", "#eccc00", "#9dbd5f", "#0097bf", "#005c7a", "#fc6000"]
 
@@ -27,10 +28,9 @@ class PointSeries extends React.Component {
     for (var i=0; i < this.props.points.length; i++) {
       series.push(
         <Point x={this.props.points[i][0]} y={this.props.points[i][1]}
-          radius={2} color={this.props.color} />
+          radius={this.props.points[i][2]} color={this.props.color} />
       )
     }
-
     return(
       <g>{series}</g>
     )
@@ -46,6 +46,8 @@ class ScatterPlot extends React.Component {
     let yKey = this.props.yKey
     let xvals = data.map(function(d) {return parseFloat(d[xKey])})
     let yvals = data.map(function(d) {return parseFloat(d[yKey])})
+
+    let circleKey = this.props.circleKey
 
     let maxX = Math.max.apply(Math, xvals)
     let minX = Math.min.apply(Math, xvals)
@@ -80,7 +82,11 @@ class ScatterPlot extends React.Component {
 
     let sets = []
     let setTitles = []
-    for (let member of data) {
+    let c = new CircleSizing(JSON.parse(JSON.stringify(this.props.data)), circleKey)
+    let circleData = c.circleSizes()
+
+    for (let member of circleData) {
+
       let key = setTitles.indexOf(member[this.props.titleKey])
 
       let widthRatio = (parseFloat(member[this.props.xKey])-minX) / (maxX-minX)
@@ -95,14 +101,14 @@ class ScatterPlot extends React.Component {
       }
       let modY = chartHeight - heightRatio*chartHeight + chartY
 
+      let radius = member["radius"]
       if (key != -1) {
-        sets[key].push([modX, modY])
+        sets[key].push([modX, modY, radius])
       } else {
         setTitles.push(member[this.props.titleKey])
-        sets.push([[modX, modY]])
+        sets.push([[modX, modY, radius]])
       }
     }
-
     let numsets = setTitles.length
     for (var i=0; i < numsets; i++) {
       chart.push(
@@ -127,6 +133,7 @@ class ScatterPlot extends React.Component {
 ScatterPlot.defaultProps = {
   width: 800,
   height: 600,
+  circleKey: "default",
   scale: "default",
   xSteps: 4,
   xTicks: "off",

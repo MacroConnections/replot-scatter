@@ -142,30 +142,30 @@ class ExampleApp extends React.Component {
     super(props)
     this.state = {
       data: [
-        // {continent: "Asia", country: "China", population: 1388232693, gdp: 11795297000},
-        // {continent: "Asia", country: "Japan", population: 126045211, gdp: 4841221000},
-        // {continent: "Asia", country: "India", population: 1342512706, gdp: 2454458000},
-        // {continent: "Asia", country: "South Korea", population: 50704971, gdp: 1498074000},
-        // {continent: "Asia", country: "Indonesia", population: 263510146, gdp: 1020515000},
-        // {continent: "Asia", country: "Saudi Arabia", population: 32742664, gdp: 707379000},
-        {continent: "S. America", country: "Brazil", population: 211243220, gdp: 2140940000},
-        {continent: "S. America", country: "Argentina", population: 44272125, gdp: 628935000},
-        {continent: "S. America", country: "Colombia", population: 49067981, gdp: 306439000},
-        {continent: "S. America", country: "Venezuela", population: 31925705, gdp: 251589000},
-        {continent: "S. America", country: "Chile", population: 18313495, gdp: 251220000},
-        {continent: "S. America", country: "Peru", population: 32166473, gdp: 207072000},
-        {continent: "Europe", country: "Germany", population: 80636124, gdp: 3423287000},
-        {continent: "Europe", country: "UK", population: 65511098, gdp: 2496757000},
-        {continent: "Europe", country: "France", population: 64938716, gdp: 2420440000},
-        {continent: "Europe", country: "Italy", population: 59797978, gdp: 1807425000},
-        {continent: "Europe", country: "Russia", population: 143375006, gdp: 1560706000},
-        {continent: "Europe", country: "Spain", population: 46070146, gdp: 1232440000},
-        {continent: "Africa", country: "Nigeria", population: 191835936, gdp: 400621000},
-        {continent: "Africa", country: "Egypt", population: 95215102, gdp: 332349000},
-        {continent: "Africa", country: "South Africa", population: 55436360, gdp: 317568000},
-        {continent: "Africa", country: "Algeria", population: 41063753, gdp: 173947000},
-        {continent: "Africa", country: "Angola", population: 26655513, gdp: 122365000},
-        {continent: "Africa", country: "Sudan", population: 42166323, gdp: 115874000},
+        {continent: "Asia", country: "China", population: 1388232693, gdp: 11795297000, average_age: 78},
+        {continent: "Asia", country: "Japan", population: 126045211, gdp: 4841221000, average_age: 45},
+        {continent: "Asia", country: "India", population: 1342512706, gdp: 2454458000, average_age: 77},
+        {continent: "Asia", country: "South Korea", population: 50704971, gdp: 1498074000, average_age: 50},
+        {continent: "Asia", country: "Indonesia", population: 263510146, gdp: 1020515000, average_age: 68},
+        {continent: "Asia", country: "Saudi Arabia", population: 32742664, gdp: 707379000, average_age: 54},
+        {continent: "S. America", country: "Brazil", population: 211243220, gdp: 2140940000, average_age: 35},
+        {continent: "S. America", country: "Argentina", population: 44272125, gdp: 628935000, average_age: 40},
+        {continent: "S. America", country: "Colombia", population: 49067981, gdp: 306439000, average_age: 52},
+        {continent: "S. America", country: "Venezuela", population: 31925705, gdp: 251589000, average_age: 45},
+        {continent: "S. America", country: "Chile", population: 18313495, gdp: 251220000, average_age: 38},
+        {continent: "S. America", country: "Peru", population: 32166473, gdp: 207072000, average_age: 46},
+        {continent: "Europe", country: "Germany", population: 80636124, gdp: 3423287000, average_age: 56},
+        {continent: "Europe", country: "UK", population: 65511098, gdp: 2496757000, average_age: 58},
+        {continent: "Europe", country: "France", population: 64938716, gdp: 2420440000, average_age: 58},
+        {continent: "Europe", country: "Italy", population: 59797978, gdp: 1807425000, average_age: 55},
+        {continent: "Europe", country: "Russia", population: 143375006, gdp: 1560706000, average_age: 68},
+        {continent: "Europe", country: "Spain", population: 46070146, gdp: 1232440000, average_age: 59},
+        {continent: "Africa", country: "Nigeria", population: 191835936, gdp: 400621000, average_age: 60},
+        {continent: "Africa", country: "Egypt", population: 95215102, gdp: 332349000, average_age: 64},
+        {continent: "Africa", country: "South Africa", population: 55436360, gdp: 317568000, average_age: 57},
+        {continent: "Africa", country: "Algeria", population: 41063753, gdp: 173947000, average_age: 57},
+        {continent: "Africa", country: "Angola", population: 26655513, gdp: 122365000, average_age: 80},
+        {continent: "Africa", country: "Sudan", population: 42166323, gdp: 115874000, average_age: 79},
       ],
       scale: "log"
     }
@@ -196,9 +196,9 @@ class ExampleApp extends React.Component {
         <h1 style={{textAlign: "center"}}> Ent: Scatterplots for react </h1>
         <KeyValueTable data={this.state.data} updateData={this.updateData.bind(this)} />
         <ScaleSwitch scale={this.state.scale} updateScale={this.updateScale.bind(this)} />
-        <div style={{width:"70%", float:"right", marginTop:"50px", padding:"50px", backgroundColor:"#323940"}}>
+        <div style={{width:"70%", float:"right", marginTop:"50px", padding:"50px", backgroundColor:"#FFFFFF"}}>
           <ScatterPlot data={this.state.data}
-            titleKey="continent" xKey="population" yKey="gdp" 
+            titleKey="continent" xKey="population" yKey="gdp" circleKey="average_age"
             scale={this.state.scale} grid="default" legend="default" color={this.state.color} />
         </div>
       </div>
