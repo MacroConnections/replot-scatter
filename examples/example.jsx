@@ -142,12 +142,12 @@ class ExampleApp extends React.Component {
     super(props)
     this.state = {
       data: [
-        // {continent: "Asia", country: "China", population: 1388232693, gdp: 11795297000},
-        // {continent: "Asia", country: "Japan", population: 126045211, gdp: 4841221000},
-        // {continent: "Asia", country: "India", population: 1342512706, gdp: 2454458000},
-        // {continent: "Asia", country: "South Korea", population: 50704971, gdp: 1498074000},
-        // {continent: "Asia", country: "Indonesia", population: 263510146, gdp: 1020515000},
-        // {continent: "Asia", country: "Saudi Arabia", population: 32742664, gdp: 707379000},
+        {continent: "Asia", country: "China", population: 1388232693, gdp: 11795297000},
+        {continent: "Asia", country: "Japan", population: 126045211, gdp: 4841221000},
+        {continent: "Asia", country: "India", population: 1342512706, gdp: 2454458000},
+        {continent: "Asia", country: "South Korea", population: 50704971, gdp: 1498074000},
+        {continent: "Asia", country: "Indonesia", population: 263510146, gdp: 1020515000},
+        {continent: "Asia", country: "Saudi Arabia", population: 32742664, gdp: 707379000},
         {continent: "S. America", country: "Brazil", population: 211243220, gdp: 2140940000},
         {continent: "S. America", country: "Argentina", population: 44272125, gdp: 628935000},
         {continent: "S. America", country: "Colombia", population: 49067981, gdp: 306439000},

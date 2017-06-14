@@ -10272,7 +10272,6 @@ var ScatterPlot = function (_React$Component3) {
         for (var _iterator = circleData[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var member = _step.value;
 
-
           var key = setTitles.indexOf(member[this.props.titleKey]);
 
           var widthRatio = (parseFloat(member[this.props.xKey]) - minX) / (maxX - minX);
@@ -10317,7 +10316,6 @@ var ScatterPlot = function (_React$Component3) {
 
       chart.push(_react2.default.createElement(_Legend2.default, { key: "legend", x: chartX, y: chartY + chartHeight + buffer, width: chartWidth,
         titles: setTitles, color: this.props.color, legendColor: this.props.legendColor }));
-
       return _react2.default.createElement(
         "svg",
         { width: this.props.width, height: this.props.height },
@@ -23355,8 +23353,12 @@ class CircleSizing {
     this.data = data
     this.circleKey = circleKey
     this.maxRadius = 8
-    this.data.sort((a, b) => b[this.circleKey] - a[this.circleKey])
-    this.largestWeight = this.data[0][this.circleKey]
+    this.largestWeight = 0
+    for (let member of this.data) {
+      if (member[this.circleKey] > this.largestWeight) {
+        this.largestWeight = member[this.circleKey]
+      }
+    }
   }
 
   circleSizes() {
@@ -23365,7 +23367,6 @@ class CircleSizing {
     //decrease the radius proportionally
     let newData = []
     let radius
-    console.log(this.data)
     if (this.circleKey == "default") {
       for (let member of this.data) {
         radius = 2.5
@@ -23379,7 +23380,6 @@ class CircleSizing {
           radius = this.maxRadius
         } else {
           let ratio =(member[this.circleKey])/ this.largestWeight
-
           radius = this.maxRadius * ratio
         }
         //adjust data
@@ -23473,7 +23473,7 @@ var KeyValueRow = function (_React$Component) {
       this.props.updateData({
         continent: this.props.continent,
         population: this.props.population,
-        gdp: e.target.value
+        averageAge: e.target.value
       });
     }
   }, {
@@ -23502,7 +23502,12 @@ var KeyValueRow = function (_React$Component) {
         _react2.default.createElement(
           "td",
           { style: style.cell },
-          _react2.default.createElement("input", { type: "text", value: parseFloat(this.props.gdp),
+          this.props.gdp
+        ),
+        _react2.default.createElement(
+          "td",
+          { style: style.cell },
+          _react2.default.createElement("input", { style: { width: "50%" }, type: "text", value: parseFloat(this.props.averageAge),
             onChange: this.changeHandler.bind(this) })
         )
       );
@@ -23527,8 +23532,7 @@ var KeyValueTable = function (_React$Component2) {
       var style = {
         container: {
           width: "30%",
-          float: "left",
-          padding: "20px"
+          float: "left"
         }
       };
       var rows = [];
@@ -23541,7 +23545,8 @@ var KeyValueTable = function (_React$Component2) {
           var dataPoint = _step.value;
 
           rows.push(_react2.default.createElement(KeyValueRow, { key: dataPoint.continent.concat(dataPoint.population),
-            continent: dataPoint.continent, population: dataPoint.population, gdp: dataPoint.gdp,
+            continent: dataPoint.continent, population: dataPoint.population,
+            gdp: dataPoint.gdp, averageAge: dataPoint.averageAge,
             updateData: this.props.updateData.bind(this) }));
         }
       } catch (err) {
@@ -23640,7 +23645,8 @@ var ScaleSwitch = function (_React$Component4) {
       var style = {
         switch: {
           width: "300px",
-          float: "left"
+          float: "left",
+          paddingLeft: "18px"
         }
       };
 
@@ -23677,7 +23683,7 @@ var ExampleApp = function (_React$Component5) {
     var _this5 = _possibleConstructorReturn(this, (ExampleApp.__proto__ || Object.getPrototypeOf(ExampleApp)).call(this, props));
 
     _this5.state = {
-      data: [{ continent: "Asia", country: "China", population: 1388232693, gdp: 11795297000, average_age: 78 }, { continent: "Asia", country: "Japan", population: 126045211, gdp: 4841221000, average_age: 45 }, { continent: "Asia", country: "India", population: 1342512706, gdp: 2454458000, average_age: 77 }, { continent: "Asia", country: "South Korea", population: 50704971, gdp: 1498074000, average_age: 50 }, { continent: "Asia", country: "Indonesia", population: 263510146, gdp: 1020515000, average_age: 68 }, { continent: "Asia", country: "Saudi Arabia", population: 32742664, gdp: 707379000, average_age: 54 }, { continent: "S. America", country: "Brazil", population: 211243220, gdp: 2140940000, average_age: 35 }, { continent: "S. America", country: "Argentina", population: 44272125, gdp: 628935000, average_age: 40 }, { continent: "S. America", country: "Colombia", population: 49067981, gdp: 306439000, average_age: 52 }, { continent: "S. America", country: "Venezuela", population: 31925705, gdp: 251589000, average_age: 45 }, { continent: "S. America", country: "Chile", population: 18313495, gdp: 251220000, average_age: 38 }, { continent: "S. America", country: "Peru", population: 32166473, gdp: 207072000, average_age: 46 }, { continent: "Europe", country: "Germany", population: 80636124, gdp: 3423287000, average_age: 56 }, { continent: "Europe", country: "UK", population: 65511098, gdp: 2496757000, average_age: 58 }, { continent: "Europe", country: "France", population: 64938716, gdp: 2420440000, average_age: 58 }, { continent: "Europe", country: "Italy", population: 59797978, gdp: 1807425000, average_age: 55 }, { continent: "Europe", country: "Russia", population: 143375006, gdp: 1560706000, average_age: 68 }, { continent: "Europe", country: "Spain", population: 46070146, gdp: 1232440000, average_age: 59 }, { continent: "Africa", country: "Nigeria", population: 191835936, gdp: 400621000, average_age: 60 }, { continent: "Africa", country: "Egypt", population: 95215102, gdp: 332349000, average_age: 64 }, { continent: "Africa", country: "South Africa", population: 55436360, gdp: 317568000, average_age: 57 }, { continent: "Africa", country: "Algeria", population: 41063753, gdp: 173947000, average_age: 57 }, { continent: "Africa", country: "Angola", population: 26655513, gdp: 122365000, average_age: 80 }, { continent: "Africa", country: "Sudan", population: 42166323, gdp: 115874000, average_age: 79 }],
+      data: [{ continent: "S. America", country: "Brazil", population: 211243220, gdp: 2140940000, averageAge: 35 }, { continent: "S. America", country: "Argentina", population: 44272125, gdp: 628935000, averageAge: 40 }, { continent: "S. America", country: "Colombia", population: 49067981, gdp: 306439000, averageAge: 52 }, { continent: "S. America", country: "Venezuela", population: 31925705, gdp: 251589000, averageAge: 45 }, { continent: "S. America", country: "Chile", population: 18313495, gdp: 251220000, averageAge: 38 }, { continent: "S. America", country: "Peru", population: 32166473, gdp: 207072000, averageAge: 46 }, { continent: "Europe", country: "Germany", population: 80636124, gdp: 3423287000, averageAge: 56 }, { continent: "Europe", country: "UK", population: 65511098, gdp: 2496757000, averageAge: 28 }, { continent: "Europe", country: "France", population: 64938716, gdp: 2420440000, averageAge: 58 }, { continent: "Europe", country: "Italy", population: 59797978, gdp: 1807425000, averageAge: 85 }, { continent: "Europe", country: "Russia", population: 143375006, gdp: 1560706000, averageAge: 68 }, { continent: "Europe", country: "Spain", population: 46070146, gdp: 1232440000, averageAge: 59 }, { continent: "Africa", country: "Nigeria", population: 191835936, gdp: 400621000, averageAge: 30 }, { continent: "Africa", country: "Egypt", population: 95215102, gdp: 332349000, averageAge: 64 }, { continent: "Africa", country: "South Africa", population: 55436360, gdp: 317568000, averageAge: 57 }, { continent: "Africa", country: "Algeria", population: 41063753, gdp: 173947000, averageAge: 57 }, { continent: "Africa", country: "Angola", population: 26655513, gdp: 122365000, averageAge: 100 }, { continent: "Africa", country: "Sudan", population: 42166323, gdp: 115874000, averageAge: 54 }, { continent: "Asia", country: "China", population: 1388232693, gdp: 11795297000, averageAge: 78 }, { continent: "Asia", country: "Japan", population: 126045211, gdp: 4841221000, averageAge: 45 }, { continent: "Asia", country: "India", population: 1342512706, gdp: 2454458000, averageAge: 77 }, { continent: "Asia", country: "South Korea", population: 50704971, gdp: 1498074000, averageAge: 50 }, { continent: "Asia", country: "Indonesia", population: 263510146, gdp: 1020515000, averageAge: 88 }, { continent: "Asia", country: "Saudi Arabia", population: 32742664, gdp: 707379000, averageAge: 54 }],
       scale: "log"
     };
     return _this5;
@@ -23695,7 +23701,7 @@ var ExampleApp = function (_React$Component5) {
         }
       }
       if (chosenIndex > -1) {
-        mutatedData[chosenIndex].gdp = parseFloat(mutatedObject.gdp);
+        mutatedData[chosenIndex].averageAge = parseFloat(mutatedObject.averageAge);
         this.setState({ data: mutatedData });
       }
     }
@@ -23719,10 +23725,11 @@ var ExampleApp = function (_React$Component5) {
         _react2.default.createElement(ScaleSwitch, { scale: this.state.scale, updateScale: this.updateScale.bind(this) }),
         _react2.default.createElement(
           "div",
-          { style: { width: "70%", float: "right", marginTop: "50px", padding: "50px", backgroundColor: "#FFFFFF" } },
+          { style: { width: "70%", float: "right", backgroundColor: "#FFFFFF" } },
           _react2.default.createElement(_index2.default, { data: this.state.data,
-            titleKey: "continent", xKey: "population", yKey: "gdp", circleKey: "average_age",
-            scale: this.state.scale, grid: "default", legend: "default", color: this.state.color })
+            titleKey: "continent", xKey: "population", yKey: "gdp", circleKey: "averageAge",
+            scale: this.state.scale, grid: "default", legend: "default", color: this.state.color,
+            xLabel: "on", yLabel: "on" })
         )
       );
     }

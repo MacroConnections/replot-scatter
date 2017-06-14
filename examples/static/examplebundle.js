@@ -10272,7 +10272,6 @@ var ScatterPlot = function (_React$Component3) {
         for (var _iterator = circleData[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var member = _step.value;
 
-
           var key = setTitles.indexOf(member[this.props.titleKey]);
 
           var widthRatio = (parseFloat(member[this.props.xKey]) - minX) / (maxX - minX);
@@ -10317,7 +10316,6 @@ var ScatterPlot = function (_React$Component3) {
 
       chart.push(_react2.default.createElement(_Legend2.default, { key: "legend", x: chartX, y: chartY + chartHeight + buffer, width: chartWidth,
         titles: setTitles, color: this.props.color, legendColor: this.props.legendColor }));
-
       return _react2.default.createElement(
         "svg",
         { width: this.props.width, height: this.props.height },
@@ -23355,8 +23353,12 @@ class CircleSizing {
     this.data = data
     this.circleKey = circleKey
     this.maxRadius = 8
-    this.data.sort((a, b) => b[this.circleKey] - a[this.circleKey])
-    this.largestWeight = this.data[0][this.circleKey]
+    this.largestWeight = 0
+    for (let member of this.data) {
+      if (member[this.circleKey] > this.largestWeight) {
+        this.largestWeight = member[this.circleKey]
+      }
+    }
   }
 
   circleSizes() {
@@ -23365,7 +23367,6 @@ class CircleSizing {
     //decrease the radius proportionally
     let newData = []
     let radius
-    console.log(this.data)
     if (this.circleKey == "default") {
       for (let member of this.data) {
         radius = 2.5
@@ -23379,7 +23380,6 @@ class CircleSizing {
           radius = this.maxRadius
         } else {
           let ratio =(member[this.circleKey])/ this.largestWeight
-
           radius = this.maxRadius * ratio
         }
         //adjust data
@@ -23676,14 +23676,7 @@ var ExampleApp = function (_React$Component5) {
     var _this5 = _possibleConstructorReturn(this, (ExampleApp.__proto__ || Object.getPrototypeOf(ExampleApp)).call(this, props));
 
     _this5.state = {
-      data: [
-      // {continent: "Asia", country: "China", population: 1388232693, gdp: 11795297000},
-      // {continent: "Asia", country: "Japan", population: 126045211, gdp: 4841221000},
-      // {continent: "Asia", country: "India", population: 1342512706, gdp: 2454458000},
-      // {continent: "Asia", country: "South Korea", population: 50704971, gdp: 1498074000},
-      // {continent: "Asia", country: "Indonesia", population: 263510146, gdp: 1020515000},
-      // {continent: "Asia", country: "Saudi Arabia", population: 32742664, gdp: 707379000},
-      { continent: "S. America", country: "Brazil", population: 211243220, gdp: 2140940000 }, { continent: "S. America", country: "Argentina", population: 44272125, gdp: 628935000 }, { continent: "S. America", country: "Colombia", population: 49067981, gdp: 306439000 }, { continent: "S. America", country: "Venezuela", population: 31925705, gdp: 251589000 }, { continent: "S. America", country: "Chile", population: 18313495, gdp: 251220000 }, { continent: "S. America", country: "Peru", population: 32166473, gdp: 207072000 }, { continent: "Europe", country: "Germany", population: 80636124, gdp: 3423287000 }, { continent: "Europe", country: "UK", population: 65511098, gdp: 2496757000 }, { continent: "Europe", country: "France", population: 64938716, gdp: 2420440000 }, { continent: "Europe", country: "Italy", population: 59797978, gdp: 1807425000 }, { continent: "Europe", country: "Russia", population: 143375006, gdp: 1560706000 }, { continent: "Europe", country: "Spain", population: 46070146, gdp: 1232440000 }, { continent: "Africa", country: "Nigeria", population: 191835936, gdp: 400621000 }, { continent: "Africa", country: "Egypt", population: 95215102, gdp: 332349000 }, { continent: "Africa", country: "South Africa", population: 55436360, gdp: 317568000 }, { continent: "Africa", country: "Algeria", population: 41063753, gdp: 173947000 }, { continent: "Africa", country: "Angola", population: 26655513, gdp: 122365000 }, { continent: "Africa", country: "Sudan", population: 42166323, gdp: 115874000 }],
+      data: [{ continent: "Asia", country: "China", population: 1388232693, gdp: 11795297000 }, { continent: "Asia", country: "Japan", population: 126045211, gdp: 4841221000 }, { continent: "Asia", country: "India", population: 1342512706, gdp: 2454458000 }, { continent: "Asia", country: "South Korea", population: 50704971, gdp: 1498074000 }, { continent: "Asia", country: "Indonesia", population: 263510146, gdp: 1020515000 }, { continent: "Asia", country: "Saudi Arabia", population: 32742664, gdp: 707379000 }, { continent: "S. America", country: "Brazil", population: 211243220, gdp: 2140940000 }, { continent: "S. America", country: "Argentina", population: 44272125, gdp: 628935000 }, { continent: "S. America", country: "Colombia", population: 49067981, gdp: 306439000 }, { continent: "S. America", country: "Venezuela", population: 31925705, gdp: 251589000 }, { continent: "S. America", country: "Chile", population: 18313495, gdp: 251220000 }, { continent: "S. America", country: "Peru", population: 32166473, gdp: 207072000 }, { continent: "Europe", country: "Germany", population: 80636124, gdp: 3423287000 }, { continent: "Europe", country: "UK", population: 65511098, gdp: 2496757000 }, { continent: "Europe", country: "France", population: 64938716, gdp: 2420440000 }, { continent: "Europe", country: "Italy", population: 59797978, gdp: 1807425000 }, { continent: "Europe", country: "Russia", population: 143375006, gdp: 1560706000 }, { continent: "Europe", country: "Spain", population: 46070146, gdp: 1232440000 }, { continent: "Africa", country: "Nigeria", population: 191835936, gdp: 400621000 }, { continent: "Africa", country: "Egypt", population: 95215102, gdp: 332349000 }, { continent: "Africa", country: "South Africa", population: 55436360, gdp: 317568000 }, { continent: "Africa", country: "Algeria", population: 41063753, gdp: 173947000 }, { continent: "Africa", country: "Angola", population: 26655513, gdp: 122365000 }, { continent: "Africa", country: "Sudan", population: 42166323, gdp: 115874000 }],
       scale: "log"
     };
     return _this5;

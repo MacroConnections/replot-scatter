@@ -86,7 +86,6 @@ class ScatterPlot extends React.Component {
     let circleData = c.circleSizes()
 
     for (let member of circleData) {
-
       let key = setTitles.indexOf(member[this.props.titleKey])
 
       let widthRatio = (parseFloat(member[this.props.xKey])-minX) / (maxX-minX)
@@ -120,7 +119,6 @@ class ScatterPlot extends React.Component {
       <Legend key={"legend"} x={chartX} y={chartY+chartHeight+buffer} width={chartWidth}
           titles={setTitles} color={this.props.color} legendColor={this.props.legendColor} />
     )
-
     return(
       <svg width={this.props.width} height={this.props.height}>
         {chart}
