@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 190);
+/******/ 	return __webpack_require__(__webpack_require__.s = 192);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -23426,7 +23426,9 @@ function ColorPalette (color1, color2, numcolors) {
 
 
 /***/ }),
-/* 190 */
+/* 190 */,
+/* 191 */,
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23498,7 +23500,7 @@ var KeyValueRow = function (_React$Component) {
         _react2.default.createElement(
           "td",
           { style: style.cell },
-          _react2.default.createElement("input", { type: "text", value: parseFloat(this.props.gdp) || "",
+          _react2.default.createElement("input", { type: "text", value: parseFloat(this.props.gdp),
             onChange: this.changeHandler.bind(this) })
         )
       );

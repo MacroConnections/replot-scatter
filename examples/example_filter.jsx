@@ -24,7 +24,7 @@ class KeyValueRow extends React.Component {
         <td style={style.cell}>{this.props.continent} </td>
         <td style={style.cell}>{this.props.population}</td>
         <td style={style.cell}>
-          <input type="text" value={parseFloat(this.props.gdp) || ""}
+          <input type="text" value={parseFloat(this.props.gdp)}
             onChange={this.changeHandler.bind(this)} />
         </td>
       </tr>
