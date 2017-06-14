@@ -23352,11 +23352,12 @@ class CircleSizing {
   constructor(data, circleKey) {
     this.data = data
     this.circleKey = circleKey
-    this.maxRadius = 8
-    this.largestWeight = 0
+    this.maxRadius = 10
+    this.minRadius = 2.5
+    this.smallestWeight = Infinity
     for (let member of this.data) {
-      if (member[this.circleKey] > this.largestWeight) {
-        this.largestWeight = member[this.circleKey]
+      if (member[this.circleKey] < this.smallestWeight) {
+        this.smallestWeight = member[this.circleKey]
       }
     }
   }
@@ -23373,11 +23374,11 @@ class CircleSizing {
       }
     } else {
       for (let member of this.data) {
-        if (member[this.circleKey] === this.largestWeight) {
-          radius = this.maxRadius
+        if (member[this.circleKey] === this.smallestWeight) {
+          radius = this.minRadius
         } else {
-          let ratio =(member[this.circleKey])/ this.largestWeight
-          radius = this.maxRadius * ratio //circle radii get propotionally smaller
+          let ratio = (member[this.circleKey])/this.smallestWeight
+          radius = this.minRadius * ratio //circle radii get propotionally larger
         }
 
         member["radius"] = radius
