@@ -24,7 +24,7 @@ class KeyValueRow extends React.Component {
         <td style={style.cell}>{this.props.continent} </td>
         <td style={style.cell}>{this.props.population}</td>
         <td style={style.cell}>
-          <input type="text" value={parseFloat(this.props.gdp) || ""}
+          <input type="text" value={parseFloat(this.props.gdp)}
             onChange={this.changeHandler.bind(this)} />
         </td>
       </tr>
@@ -196,7 +196,7 @@ class ExampleApp extends React.Component {
         <h1 style={{textAlign: "center"}}> Ent: Scatterplots for react </h1>
         <KeyValueTable data={this.state.data} updateData={this.updateData.bind(this)} />
         <ScaleSwitch scale={this.state.scale} updateScale={this.updateScale.bind(this)} />
-        <div style={{width:"70%", float:"right", marginTop:"50px", padding:"50px", backgroundColor:"#FFFFFF"}}>
+        <div style={{width:"70%", float:"right", marginTop:"50px", padding:"50px", backgroundColor:"#323940"}}>
           <ScatterPlot data={this.state.data}
             titleKey="continent" xKey="population" yKey="gdp"
             scale={this.state.scale} grid="default" legend="default" color={this.state.color} />

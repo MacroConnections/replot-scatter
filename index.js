@@ -264,9 +264,13 @@ var _Color = __webpack_require__(2);
 
 var _Color2 = _interopRequireDefault(_Color);
 
-var _ColorPalette = __webpack_require__(8);
+var _ColorPalette = __webpack_require__(9);
 
 var _ColorPalette2 = _interopRequireDefault(_ColorPalette);
+
+var _CircleSizing = __webpack_require__(8);
+
+var _CircleSizing2 = _interopRequireDefault(_CircleSizing);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -317,9 +321,8 @@ var PointSeries = function (_React$Component2) {
       var series = [];
       for (var i = 0; i < this.props.points.length; i++) {
         series.push(_react2.default.createElement(Point, { x: this.props.points[i][0], y: this.props.points[i][1],
-          radius: 2, color: this.props.color }));
+          radius: this.props.points[i][2], color: this.props.color }));
       }
-
       return _react2.default.createElement(
         "g",
         null,
@@ -353,6 +356,10 @@ var ScatterPlot = function (_React$Component3) {
         return parseFloat(d[yKey]);
       });
 
+      var circleKey = this.props.circleKey;
+      var maxRadius = this.props.maxRadius;
+      var minRadius = this.props.minRadius;
+
       var maxX = Math.max.apply(Math, xvals);
       var minX = Math.min.apply(Math, xvals);
       var maxY = Math.max.apply(Math, yvals);
@@ -384,12 +391,15 @@ var ScatterPlot = function (_React$Component3) {
 
       var sets = [];
       var setTitles = [];
+      var c = new _CircleSizing2.default(JSON.parse(JSON.stringify(this.props.data)), circleKey, maxRadius, minRadius);
+      var circleData = c.circleSizes();
+
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = data[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = circleData[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var member = _step.value;
 
           var key = setTitles.indexOf(member[this.props.titleKey]);
@@ -406,11 +416,12 @@ var ScatterPlot = function (_React$Component3) {
           }
           var modY = chartHeight - heightRatio * chartHeight + chartY;
 
+          var radius = member["radius"];
           if (key != -1) {
-            sets[key].push([modX, modY]);
+            sets[key].push([modX, modY, radius]);
           } else {
             setTitles.push(member[this.props.titleKey]);
-            sets.push([[modX, modY]]);
+            sets.push([[modX, modY, radius]]);
           }
         }
       } catch (err) {
@@ -435,7 +446,6 @@ var ScatterPlot = function (_React$Component3) {
 
       chart.push(_react2.default.createElement(_Legend2.default, { key: "legend", x: chartX, y: chartY + chartHeight + buffer, width: chartWidth,
         titles: setTitles, color: this.props.color, legendColor: this.props.legendColor }));
-
       return _react2.default.createElement(
         "svg",
         { width: this.props.width, height: this.props.height },
@@ -450,6 +460,9 @@ var ScatterPlot = function (_React$Component3) {
 ScatterPlot.defaultProps = {
   width: 800,
   height: 600,
+  circleKey: "default",
+  maxRadius: 10,
+  minRadius: 2.5,
   scale: "default",
   xSteps: 4,
   xTicks: "off",
@@ -595,8 +608,8 @@ var XAxis = function (_React$Component3) {
         xAxis.push(_react2.default.createElement(
           "text",
           { key: "xlabel",
-            x: this.props.x + this.props.width / 2, y: this.props.y + this.props.height + 50,
-            fontSize: 18, fill: this.props.color },
+            x: this.props.x + this.props.width / 2, y: this.props.y + this.props.height + 55,
+            fontSize: 16, fill: this.props.color },
           this.props.xLabel
         ));
       }
@@ -713,7 +726,7 @@ var YAxis = function (_React$Component6) {
           "text",
           { key: "ylabel",
             x: 0, y: this.props.y + this.props.height / 2 + 10,
-            fontSize: 18, transform: rotation, fill: this.props.color },
+            fontSize: 16, transform: rotation, fill: this.props.color },
           this.props.yLabel
         ));
       }
@@ -866,7 +879,6 @@ var Legend = function (_React$Component) {
           this.props.titles[i]
         ));
       }
-
       return _react2.default.createElement(
         "g",
         null,
@@ -1441,6 +1453,73 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 /***/ }),
 /* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+class CircleSizing {
+  constructor(data, circleKey, maxRadius, minRadius) {
+    this.data = data
+    this.circleKey = circleKey
+    this.maxRadius = maxRadius
+    this.minRadius = minRadius
+
+    this.smallestWeight = Infinity
+    this.largestWeight = 0
+
+    this.sortedData = JSON.parse(JSON.stringify(this.data))
+    this.sortedData.sort((a, b) => a[this.weightKey] - b[this.weightKey])
+
+    for (let member of this.sortedData) {
+      if (member[this.circleKey] < this.smallestWeight && member[this.circleKey] !== null) {
+        this.smallestWeight = member[this.circleKey]
+      }
+      if (member[this.circleKey] > this.largestWeight && member[this.circleKey] !== null) {
+        this.largestWeight = member[this.circleKey]
+      }
+    }
+  }
+
+  circleSizes() {
+    let newData = []
+    let radius
+    if (this.circleKey == "default") {
+      for (let member of this.data) {
+        radius = 2.5
+        member["radius"] = radius
+        newData.push(member)
+      }
+    } else {
+      //circle radii get propotionally larger
+      let stepSize = (this.maxRadius-this.minRadius)/(this.largestWeight-this.smallestWeight)
+      for (let member of this.data) {
+        if (member[this.circleKey] == this.smallestWeight) {
+          radius = this.minRadius //smallest weight has minRadius
+        } else if (member[this.circleKey] == this.largestWeight) {
+          radius = this.maxRadius //largest weight has maxRadius
+        } else {
+          let ratio = member[this.circleKey] - this.smallestWeight
+          if (ratio > 0) {
+            radius = this.minRadius + (ratio * stepSize)
+          } else {
+            radius = -1 //ratio is negative = value was removed/zero, don't need to add this point
+          }
+        }
+        if (radius > 0) {
+          member["radius"] = radius
+          newData.push(member)
+        }
+      }
+    }
+    return newData
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (CircleSizing);
+
+
+/***/ }),
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
