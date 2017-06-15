@@ -10089,7 +10089,6 @@ var Legend = function (_React$Component) {
           this.props.titles[i]
         ));
       }
-
       return _react2.default.createElement(
         "g",
         null,
@@ -10261,7 +10260,7 @@ var ScatterPlot = function (_React$Component3) {
 
       var sets = [];
       var setTitles = [];
-      var c = new _CircleSizing2.default(JSON.parse(JSON.stringify(this.props.data)), circleKey);
+      var c = new _CircleSizing2.default(JSON.parse(JSON.stringify(this.props.data)), circleKey, this.props.maxRadius, this.props.minRadius);
       var circleData = c.circleSizes();
 
       var _iteratorNormalCompletion = true;
@@ -10315,7 +10314,7 @@ var ScatterPlot = function (_React$Component3) {
       }
 
       chart.push(_react2.default.createElement(_Legend2.default, { key: "legend", x: chartX, y: chartY + chartHeight + buffer, width: chartWidth,
-        titles: setTitles, color: this.props.color, legendColor: this.props.legendColor }));
+        titles: setTitles, color: this.props.color, legendColor: this.props.legendColor, radius: this.props.minRadius }));
       return _react2.default.createElement(
         "svg",
         { width: this.props.width, height: this.props.height },
@@ -10331,6 +10330,8 @@ ScatterPlot.defaultProps = {
   width: 800,
   height: 600,
   circleKey: "default",
+  maxRadius: 10,
+  minRadius: 2.5,
   scale: "default",
   xSteps: 4,
   xTicks: "off",
@@ -23349,15 +23350,24 @@ module.exports = traverseAllChildren;
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 class CircleSizing {
-  constructor(data, circleKey) {
+  constructor(data, circleKey, maxRadius, minRadius) {
     this.data = data
     this.circleKey = circleKey
-    this.maxRadius = 10
-    this.minRadius = 2.5
+    this.maxRadius = maxRadius
+    this.minRadius = minRadius
+
     this.smallestWeight = Infinity
-    for (let member of this.data) {
-      if (member[this.circleKey] < this.smallestWeight) {
+    this.largestWeight = 0
+
+    this.sortedData = JSON.parse(JSON.stringify(this.data))
+    this.sortedData.sort((a, b) => a[this.weightKey] - b[this.weightKey])
+
+    for (let member of this.sortedData) {
+      if (member[this.circleKey] < this.smallestWeight && member[this.circleKey] !== null) {
         this.smallestWeight = member[this.circleKey]
+      }
+      if (member[this.circleKey] > this.largestWeight && member[this.circleKey] !== null) {
+        this.largestWeight = member[this.circleKey]
       }
     }
   }
@@ -23368,21 +23378,29 @@ class CircleSizing {
     if (this.circleKey == "default") {
       for (let member of this.data) {
         radius = 2.5
-        //adjust data
         member["radius"] = radius
         newData.push(member)
       }
     } else {
+      //circle radii get propotionally larger
+      let stepSize = (this.maxRadius-this.minRadius)/(this.largestWeight-this.smallestWeight)
       for (let member of this.data) {
-        if (member[this.circleKey] === this.smallestWeight) {
-          radius = this.minRadius
+        if (member[this.circleKey] == this.smallestWeight) {
+          radius = this.minRadius //smallest weight has minRadius
+        } else if (member[this.circleKey] == this.largestWeight) {
+          radius = this.maxRadius //largest weight has maxRadius
         } else {
-          let ratio = (member[this.circleKey])/this.smallestWeight
-          radius = this.minRadius * ratio //circle radii get propotionally larger
+          let ratio = member[this.circleKey] - this.smallestWeight
+          if (ratio > 0) {
+            radius = this.minRadius + (ratio * stepSize)
+          } else {
+            radius = -1 //ratio is negative = value was removed/zero, don't need to add this point
+          }
         }
-
-        member["radius"] = radius
-        newData.push(member)
+        if (radius > 0) {
+          member["radius"] = radius
+          newData.push(member)
+        }
       }
     }
     return newData

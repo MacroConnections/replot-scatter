@@ -59,6 +59,7 @@ class KeyValueTable extends React.Component {
         width: "30%",
         float: "left",
         paddingLeft: "10px",
+        paddingRight: "5px"
       }
     }
     let rows = []
@@ -244,7 +245,7 @@ class ExampleApp extends React.Component {
     let mutatedData = JSON.parse(JSON.stringify(this.state.data))
     let chosenIndex = -1
     for (let index=0; index < mutatedData.length; index++) {
-      if (mutatedData[index].gender === mutatedObject.gender && mutatedData[index].height === mutatedObject.height) {
+      if (mutatedData[index].weight === mutatedObject.weight && mutatedData[index].height === mutatedObject.height) {
         chosenIndex = index
         break
       }
@@ -268,7 +269,7 @@ class ExampleApp extends React.Component {
           <ScatterPlot data={this.state.data}
             titleKey="gender" xKey="height" yKey="weight" circleKey="shoeSize"
             scale={this.state.scale} grid="default" legend="default" color={this.state.color}
-            xLabel="on" yLabel="on"/>
+            xLabel="on" yLabel="on" />
         </div>
       </div>
     )

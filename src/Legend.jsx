@@ -16,7 +16,6 @@ class Legend extends React.Component {
            fontSize={15} fill={this.props.legendColor}>{this.props.titles[i]}</text>
       )
     }
-
     return(
       <g>{legend}</g>
     )

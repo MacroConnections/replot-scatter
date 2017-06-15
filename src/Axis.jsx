@@ -65,8 +65,8 @@ class XAxis extends React.Component {
     if (this.props.xLabel != "off") {
       xAxis.push(
         <text key={"xlabel"}
-          x={this.props.x+this.props.width/2} y={this.props.y+this.props.height+50}
-          fontSize={18} fill={this.props.color}>
+          x={this.props.x+this.props.width/2} y={this.props.y+this.props.height+55}
+          fontSize={16} fill={this.props.color}>
           {this.props.xLabel}
         </text>
       )
@@ -152,7 +152,7 @@ class YAxis extends React.Component {
       yAxis.push(
         <text key={"ylabel"}
           x={0} y={this.props.y+this.props.height/2+10}
-          fontSize={18} transform={rotation} fill={this.props.color}>
+          fontSize={16} transform={rotation} fill={this.props.color}>
           {this.props.yLabel}
         </text>
       )
