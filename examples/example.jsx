@@ -196,7 +196,7 @@ class ExampleApp extends React.Component {
         <h1 style={{textAlign: "center"}}> Ent: Scatterplots for react </h1>
         <KeyValueTable data={this.state.data} updateData={this.updateData.bind(this)} />
         <ScaleSwitch scale={this.state.scale} updateScale={this.updateScale.bind(this)} />
-        <div style={{width:"70%", float:"right", marginTop:"50px", padding:"50px", backgroundColor:"#323940"}}>
+        <div style={{width:"70%", float:"right", marginTop:"50px", padding:"50px", backgroundColor:"#FFFFFF"}}>
           <ScatterPlot data={this.state.data}
             titleKey="continent" xKey="population" yKey="gdp"
             scale={this.state.scale} grid="default" legend="default" color={this.state.color} />

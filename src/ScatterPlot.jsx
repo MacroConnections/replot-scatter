@@ -48,6 +48,8 @@ class ScatterPlot extends React.Component {
     let yvals = data.map(function(d) {return parseFloat(d[yKey])})
 
     let circleKey = this.props.circleKey
+    let maxRadius = this.props.maxRadius
+    let minRadius = this.props.minRadius
 
     let maxX = Math.max.apply(Math, xvals)
     let minX = Math.min.apply(Math, xvals)
@@ -82,7 +84,7 @@ class ScatterPlot extends React.Component {
 
     let sets = []
     let setTitles = []
-    let c = new CircleSizing(JSON.parse(JSON.stringify(this.props.data)), circleKey, this.props.maxRadius, this.props.minRadius)
+    let c = new CircleSizing(JSON.parse(JSON.stringify(this.props.data)), circleKey, maxRadius, minRadius)
     let circleData = c.circleSizes()
 
     for (let member of circleData) {
@@ -117,7 +119,7 @@ class ScatterPlot extends React.Component {
 
     chart.push(
       <Legend key={"legend"} x={chartX} y={chartY+chartHeight+buffer} width={chartWidth}
-          titles={setTitles} color={this.props.color} legendColor={this.props.legendColor} radius={this.props.minRadius} />
+          titles={setTitles} color={this.props.color} legendColor={this.props.legendColor} />
     )
     return(
       <svg width={this.props.width} height={this.props.height}>

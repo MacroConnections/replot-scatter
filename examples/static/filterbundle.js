@@ -10228,6 +10228,8 @@ var ScatterPlot = function (_React$Component3) {
       });
 
       var circleKey = this.props.circleKey;
+      var maxRadius = this.props.maxRadius;
+      var minRadius = this.props.minRadius;
 
       var maxX = Math.max.apply(Math, xvals);
       var minX = Math.min.apply(Math, xvals);
@@ -10260,7 +10262,7 @@ var ScatterPlot = function (_React$Component3) {
 
       var sets = [];
       var setTitles = [];
-      var c = new _CircleSizing2.default(JSON.parse(JSON.stringify(this.props.data)), circleKey, this.props.maxRadius, this.props.minRadius);
+      var c = new _CircleSizing2.default(JSON.parse(JSON.stringify(this.props.data)), circleKey, maxRadius, minRadius);
       var circleData = c.circleSizes();
 
       var _iteratorNormalCompletion = true;
@@ -10314,7 +10316,7 @@ var ScatterPlot = function (_React$Component3) {
       }
 
       chart.push(_react2.default.createElement(_Legend2.default, { key: "legend", x: chartX, y: chartY + chartHeight + buffer, width: chartWidth,
-        titles: setTitles, color: this.props.color, legendColor: this.props.legendColor, radius: this.props.minRadius }));
+        titles: setTitles, color: this.props.color, legendColor: this.props.legendColor }));
       return _react2.default.createElement(
         "svg",
         { width: this.props.width, height: this.props.height },
