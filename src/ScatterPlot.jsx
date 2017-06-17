@@ -5,20 +5,30 @@ import Legend from "./Legend.jsx"
 import Color from "./Color.js"
 import ColorPalette from "./ColorPalette.js"
 import CircleSizing from "./CircleSizing.js"
+import {spring, Motion} from "react-motion"
 
 const defPalette = ["#4cab92", "#ca0004", "#003953", "#eccc00", "#9dbd5f", "#0097bf", "#005c7a", "#fc6000"]
 
-class Point extends React.Component {
+// class Point extends React.Component {
 
-  render() {
-    return(
-      <g>
-        <circle cx={this.props.x} cy={this.props.y} r={this.props.radius}
-          stroke={this.props.color} fill={this.props.color} />
-      </g>
-    )
-  }
-
+const Point = (props) => {
+  return(
+    <Motion
+      defaultStyle={{ x: 0, y:0, radius: 0}}
+      style={{
+        x: spring(props.x, {stiffness: 60, damping: 5}),
+        y: spring(props.y, {stiffness: 60, damping: 5}),
+        radius: spring(props.radius, {stiffness: 15, damping: 5})
+      }}
+    >
+      {
+        style =>
+        <circle
+          cx={style.x} cy={style.y} r={style.radius}
+          stroke={props.color} fill={props.color}/>
+    }
+    </Motion>
+  )
 }
 
 class PointSeries extends React.Component {

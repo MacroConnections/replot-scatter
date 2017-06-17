@@ -43,10 +43,8 @@ class CircleSizing {
           if (ratio > 0) {
             radius = this.minRadius + (ratio * stepSize)
           } else {
-            radius = -1 //ratio is negative = value was removed/zero, don't need to add this point
+            radius = 0 //ratio is negative = value was removed/zero, don't need to add this point
           }
-        }
-        if (radius > 0) {
           member["radius"] = radius
           newData.push(member)
         }
