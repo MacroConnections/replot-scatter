@@ -12,13 +12,13 @@ const defPalette = ["#4cab92", "#ca0004", "#003953", "#eccc00", "#9dbd5f", "#009
 // class Point extends React.Component {
 
 const Point = (props) => {
-  return(
+  return (
     <Motion
       defaultStyle={{ x: 0, y:0, radius: 0}}
       style={{
         x: spring(props.x, {stiffness: 60, damping: 5}),
         y: spring(props.y, {stiffness: 60, damping: 5}),
-        radius: spring(props.radius, {stiffness: 15, damping: 5})
+        radius: spring(props.radius),
       }}
     >
       {

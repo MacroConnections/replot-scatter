@@ -10990,7 +10990,7 @@ var Point = function Point(props) {
       style: {
         x: (0, _reactMotion.spring)(props.x, { stiffness: 60, damping: 5 }),
         y: (0, _reactMotion.spring)(props.y, { stiffness: 60, damping: 5 }),
-        radius: (0, _reactMotion.spring)(props.radius, { stiffness: 15, damping: 5 })
+        radius: (0, _reactMotion.spring)(props.radius)
       }
     },
     function (style) {
@@ -25770,9 +25770,15 @@ class CircleSizing {
           if (ratio > 0) {
             radius = this.minRadius + (ratio * stepSize)
           } else {
-            radius = 0 //ratio is negative = value was removed/zero, don't need to add this point
+            radius = -1 //ratio is negative = value was removed/zero, don't need to add this point
           }
+        }
+        if (radius > 0) {
           member["radius"] = radius
+          newData.push(member)
+        }
+        else {
+          member["radius"] = 0
           newData.push(member)
         }
       }
