@@ -26,13 +26,14 @@ class CircleSizing {
     let radius
     if (this.circleKey == "default") {
       for (let member of this.data) {
-        radius = 2.5
+        radius = this.minRadius
         member["radius"] = radius
         newData.push(member)
       }
     } else {
       //circle radii get propotionally larger
       let stepSize = (this.maxRadius-this.minRadius)/(this.largestWeight-this.smallestWeight)
+
       for (let member of this.data) {
         if (member[this.circleKey] == this.smallestWeight) {
           radius = this.minRadius //smallest weight has minRadius
@@ -43,13 +44,11 @@ class CircleSizing {
           if (ratio > 0) {
             radius = this.minRadius + (ratio * stepSize)
           } else {
-            radius = -1 //ratio is negative = value was removed/zero, don't need to add this point
+            radius = 0 //ratio is negative = value was removed/zero
           }
         }
-        if (radius > 0) {
-          member["radius"] = radius
-          newData.push(member)
-        }
+        member["radius"] = radius
+        newData.push(member)
       }
     }
     return newData
