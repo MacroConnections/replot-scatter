@@ -14,7 +14,6 @@ const Point = (props) => {
   let c = props.equation.c
   let yVal = (m*props.x)+c
 
-  console.log(m, c, yVal)
   return (
     <Motion
       defaultStyle={{ x: props.x, y: yVal, radius: 0}}
@@ -145,6 +144,7 @@ class ScatterPlot extends React.Component {
       sumXY += (modX * modY)
       sumXSquare += (modX * modX)
     }
+
     //calculate line of best fit (linear regression)
     //y = mx + c
     let numData = circleData.length
