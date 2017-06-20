@@ -198,7 +198,7 @@ class ExampleApp extends React.Component {
         <ScaleSwitch scale={this.state.scale} updateScale={this.updateScale.bind(this)} />
         <div style={{width:"70%", float:"right", marginTop:"50px", padding:"50px", backgroundColor:"#FFFFFF"}}>
           <ScatterPlot data={this.state.data}
-            titleKey="continent" xKey="population" yKey="gdp"
+            titleKey="continent" xKey="population" yKey="gdp" minRadius={3}
             scale={this.state.scale} grid="default" legend="default" color={this.state.color} />
         </div>
       </div>

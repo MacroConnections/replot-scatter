@@ -10980,16 +10980,19 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var defPalette = ["#4cab92", "#ca0004", "#003953", "#eccc00", "#9dbd5f", "#0097bf", "#005c7a", "#fc6000"];
 
-// class Point extends React.Component {
-
 var Point = function Point(props) {
+  var m = props.equation.m;
+  var c = props.equation.c;
+  var yVal = m * props.x + c;
+
+  console.log(m, c, yVal);
   return _react2.default.createElement(
     _reactMotion.Motion,
     {
-      defaultStyle: { x: 0, y: 0, radius: 0 },
+      defaultStyle: { x: props.x, y: yVal, radius: 0 },
       style: {
-        x: (0, _reactMotion.spring)(props.x, { stiffness: 60, damping: 5 }),
-        y: (0, _reactMotion.spring)(props.y, { stiffness: 60, damping: 5 }),
+        x: (0, _reactMotion.spring)(props.x, { stiffness: 80, damping: 10 }),
+        y: (0, _reactMotion.spring)(props.y, { stiffness: 80, damping: 10 }),
         radius: (0, _reactMotion.spring)(props.radius)
       }
     },
@@ -11014,10 +11017,32 @@ var PointSeries = function (_React$Component) {
     key: "render",
     value: function render() {
       var series = [];
-      for (var i = 0; i < this.props.points.length; i++) {
-        series.push(_react2.default.createElement(Point, { x: this.props.points[i][0], y: this.props.points[i][1],
-          radius: this.props.points[i][2], color: this.props.color }));
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.props.points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var member = _step.value;
+
+          series.push(_react2.default.createElement(Point, { x: member.x, y: member.y,
+            radius: member.r, color: member.color, equation: this.props.equation }));
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
+
       return _react2.default.createElement(
         "g",
         null,
@@ -11089,13 +11114,18 @@ var ScatterPlot = function (_React$Component2) {
       var c = new _CircleSizing2.default(JSON.parse(JSON.stringify(this.props.data)), circleKey, maxRadius, minRadius);
       var circleData = c.circleSizes();
 
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var sumX = 0;
+      var sumY = 0;
+      var sumXY = 0;
+      var sumXSquare = 0;
+
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
       try {
-        for (var _iterator = circleData[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var member = _step.value;
+        for (var _iterator2 = circleData[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var member = _step2.value;
 
           var key = setTitles.indexOf(member[this.props.titleKey]);
 
@@ -11112,31 +11142,86 @@ var ScatterPlot = function (_React$Component2) {
           var modY = chartHeight - heightRatio * chartHeight + chartY;
 
           var radius = member["radius"];
+
+          var displayColor = void 0;
+          if (this.props.filterBy !== "none") {
+            if (member[this.props.filterBy.prop] == this.props.filterBy.value) {
+              displayColor = true;
+            } else {
+              displayColor = false;
+            }
+          } else {
+            displayColor = true;
+          }
+
+          var p = { x: modX, y: modY, r: radius, f: displayColor };
           if (key != -1) {
-            sets[key].push([modX, modY, radius]);
+            sets[key].push(p);
           } else {
             setTitles.push(member[this.props.titleKey]);
-            sets.push([[modX, modY, radius]]);
+            sets.push([p]);
           }
+
+          sumX += modX;
+          sumY += modY;
+          sumXY += modX * modY;
+          sumXSquare += modX * modX;
         }
+        //calculate line of best fit (linear regression)
+        //y = mx + c
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
           }
         } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
+          if (_didIteratorError2) {
+            throw _iteratorError2;
           }
         }
       }
 
+      var numData = circleData.length;
+      var mVal = (numData * sumXY - sumX * sumY) / (numData * sumXSquare - sumX * sumX);
+      var cVal = (sumXSquare * sumY - sumX * sumXY) / (numData * sumXSquare - sumX * sumX);
+      var eq = { m: mVal, c: cVal };
+
       var numsets = setTitles.length;
       for (var i = 0; i < numsets; i++) {
-        chart.push(_react2.default.createElement(PointSeries, { points: sets[i], color: this.props.color[i % this.props.color.length] }));
+        var color = this.props.color[i % this.props.color.length];
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
+
+        try {
+          for (var _iterator3 = sets[i][Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var point = _step3.value;
+
+            if (point.f) {
+              point["color"] = color;
+            } else {
+              point["color"] = "#a6acad";
+            }
+
+            chart.push(_react2.default.createElement(PointSeries, { points: sets[i], color: color, equation: eq }));
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
+            }
+          }
+        }
       }
 
       chart.push(_react2.default.createElement(_Legend2.default, { key: "legend", x: chartX, y: chartY + chartHeight + buffer, width: chartWidth,
@@ -11158,6 +11243,7 @@ ScatterPlot.defaultProps = {
   circleKey: "default",
   maxRadius: 10,
   minRadius: 2.5,
+  filterBy: "none",
   scale: "default",
   xSteps: 4,
   xTicks: "off",
@@ -25753,13 +25839,14 @@ class CircleSizing {
     let radius
     if (this.circleKey == "default") {
       for (let member of this.data) {
-        radius = 2.5
+        radius = this.minRadius
         member["radius"] = radius
         newData.push(member)
       }
     } else {
       //circle radii get propotionally larger
       let stepSize = (this.maxRadius-this.minRadius)/(this.largestWeight-this.smallestWeight)
+
       for (let member of this.data) {
         if (member[this.circleKey] == this.smallestWeight) {
           radius = this.minRadius //smallest weight has minRadius
@@ -25770,17 +25857,11 @@ class CircleSizing {
           if (ratio > 0) {
             radius = this.minRadius + (ratio * stepSize)
           } else {
-            radius = -1 //ratio is negative = value was removed/zero, don't need to add this point
+            radius = 0 //ratio is negative = value was removed/zero
           }
         }
-        if (radius > 0) {
-          member["radius"] = radius
-          newData.push(member)
-        }
-        else {
-          member["radius"] = 0
-          newData.push(member)
-        }
+        member["radius"] = radius
+        newData.push(member)
       }
     }
     return newData
@@ -26143,7 +26224,7 @@ var ExampleApp = function (_React$Component5) {
           "div",
           { style: { width: "70%", float: "right", marginTop: "50px", padding: "50px", backgroundColor: "#FFFFFF" } },
           _react2.default.createElement(_index2.default, { data: this.state.data,
-            titleKey: "continent", xKey: "population", yKey: "gdp",
+            titleKey: "continent", xKey: "population", yKey: "gdp", minRadius: 3,
             scale: this.state.scale, grid: "default", legend: "default", color: this.state.color })
         )
       );

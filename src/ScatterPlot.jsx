@@ -9,15 +9,18 @@ import {spring, Motion} from "react-motion"
 
 const defPalette = ["#4cab92", "#ca0004", "#003953", "#eccc00", "#9dbd5f", "#0097bf", "#005c7a", "#fc6000"]
 
-// class Point extends React.Component {
-
 const Point = (props) => {
+  let m = props.equation.m
+  let c = props.equation.c
+  let yVal = (m*props.x)+c
+
+  console.log(m, c, yVal)
   return (
     <Motion
-      defaultStyle={{ x: 0, y:0, radius: 0}}
+      defaultStyle={{ x: props.x, y: yVal, radius: 0}}
       style={{
-        x: spring(props.x, {stiffness: 60, damping: 5}),
-        y: spring(props.y, {stiffness: 60, damping: 5}),
+        x: spring(props.x, {stiffness: 80, damping: 10}),
+        y: spring(props.y, {stiffness: 80, damping: 10}),
         radius: spring(props.radius),
       }}
     >
@@ -32,13 +35,12 @@ const Point = (props) => {
 }
 
 class PointSeries extends React.Component {
-
   render() {
     let series = []
-    for (var i=0; i < this.props.points.length; i++) {
+    for (let member of this.props.points) {
       series.push(
-        <Point x={this.props.points[i][0]} y={this.props.points[i][1]}
-          radius={this.props.points[i][2]} color={this.props.color} />
+        <Point x={member.x} y={member.y}
+          radius={member.r} color={member.color} equation={this.props.equation}/>
       )
     }
     return(
@@ -97,6 +99,11 @@ class ScatterPlot extends React.Component {
     let c = new CircleSizing(JSON.parse(JSON.stringify(this.props.data)), circleKey, maxRadius, minRadius)
     let circleData = c.circleSizes()
 
+    let sumX = 0
+    let sumY = 0
+    let sumXY = 0
+    let sumXSquare = 0
+
     for (let member of circleData) {
       let key = setTitles.indexOf(member[this.props.titleKey])
 
@@ -113,19 +120,53 @@ class ScatterPlot extends React.Component {
       let modY = chartHeight - heightRatio*chartHeight + chartY
 
       let radius = member["radius"]
+
+      let displayColor
+      if (this.props.filterBy !== "none") {
+        if (member[this.props.filterBy.prop] == this.props.filterBy.value) {
+          displayColor = true
+        } else {
+          displayColor = false
+        }
+      } else {
+        displayColor = true
+      }
+
+      let p = {x: modX, y: modY, r: radius, f: displayColor}
       if (key != -1) {
-        sets[key].push([modX, modY, radius])
+        sets[key].push(p)
       } else {
         setTitles.push(member[this.props.titleKey])
-        sets.push([[modX, modY, radius]])
+        sets.push([p])
       }
+
+      sumX += modX
+      sumY += modY
+      sumXY += (modX * modY)
+      sumXSquare += (modX * modX)
     }
+    //calculate line of best fit (linear regression)
+    //y = mx + c
+    let numData = circleData.length
+    let mVal = ((numData * sumXY) - (sumX * sumY)) / ((numData * sumXSquare) - (sumX * sumX))
+    let cVal = ((sumXSquare * sumY) - (sumX * sumXY)) / ((numData * sumXSquare) - (sumX * sumX))
+    let eq = {m:mVal, c:cVal}
+
     let numsets = setTitles.length
     for (var i=0; i < numsets; i++) {
+      let color = this.props.color[i%this.props.color.length]
+      for (let point of sets[i]) {
+        if (point.f) {
+          point["color"] = color
+      } else {
+        point["color"] = "#a6acad"
+      }
+
       chart.push(
-        <PointSeries points={sets[i]} color={this.props.color[i%this.props.color.length]} />
+        <PointSeries points={sets[i]} color={color} equation={eq}/>
       )
     }
+  }
 
     chart.push(
       <Legend key={"legend"} x={chartX} y={chartY+chartHeight+buffer} width={chartWidth}
@@ -146,6 +187,7 @@ ScatterPlot.defaultProps = {
   circleKey: "default",
   maxRadius: 10,
   minRadius: 2.5,
+  filterBy: "none",
   scale: "default",
   xSteps: 4,
   xTicks: "off",

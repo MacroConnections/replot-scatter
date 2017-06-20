@@ -10980,16 +10980,19 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var defPalette = ["#4cab92", "#ca0004", "#003953", "#eccc00", "#9dbd5f", "#0097bf", "#005c7a", "#fc6000"];
 
-// class Point extends React.Component {
-
 var Point = function Point(props) {
+  var m = props.equation.m;
+  var c = props.equation.c;
+  var yVal = m * props.x + c;
+
+  console.log(m, c, yVal);
   return _react2.default.createElement(
     _reactMotion.Motion,
     {
-      defaultStyle: { x: 0, y: 0, radius: 0 },
+      defaultStyle: { x: props.x, y: yVal, radius: 0 },
       style: {
-        x: (0, _reactMotion.spring)(props.x, { stiffness: 60, damping: 5 }),
-        y: (0, _reactMotion.spring)(props.y, { stiffness: 60, damping: 5 }),
+        x: (0, _reactMotion.spring)(props.x, { stiffness: 80, damping: 10 }),
+        y: (0, _reactMotion.spring)(props.y, { stiffness: 80, damping: 10 }),
         radius: (0, _reactMotion.spring)(props.radius)
       }
     },
@@ -11014,10 +11017,32 @@ var PointSeries = function (_React$Component) {
     key: "render",
     value: function render() {
       var series = [];
-      for (var i = 0; i < this.props.points.length; i++) {
-        series.push(_react2.default.createElement(Point, { x: this.props.points[i][0], y: this.props.points[i][1],
-          radius: this.props.points[i][2], color: this.props.color }));
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.props.points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var member = _step.value;
+
+          series.push(_react2.default.createElement(Point, { x: member.x, y: member.y,
+            radius: member.r, color: member.color, equation: this.props.equation }));
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
+
       return _react2.default.createElement(
         "g",
         null,
@@ -11089,13 +11114,18 @@ var ScatterPlot = function (_React$Component2) {
       var c = new _CircleSizing2.default(JSON.parse(JSON.stringify(this.props.data)), circleKey, maxRadius, minRadius);
       var circleData = c.circleSizes();
 
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var sumX = 0;
+      var sumY = 0;
+      var sumXY = 0;
+      var sumXSquare = 0;
+
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
       try {
-        for (var _iterator = circleData[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var member = _step.value;
+        for (var _iterator2 = circleData[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var member = _step2.value;
 
           var key = setTitles.indexOf(member[this.props.titleKey]);
 
@@ -11112,31 +11142,86 @@ var ScatterPlot = function (_React$Component2) {
           var modY = chartHeight - heightRatio * chartHeight + chartY;
 
           var radius = member["radius"];
+
+          var displayColor = void 0;
+          if (this.props.filterBy !== "none") {
+            if (member[this.props.filterBy.prop] == this.props.filterBy.value) {
+              displayColor = true;
+            } else {
+              displayColor = false;
+            }
+          } else {
+            displayColor = true;
+          }
+
+          var p = { x: modX, y: modY, r: radius, f: displayColor };
           if (key != -1) {
-            sets[key].push([modX, modY, radius]);
+            sets[key].push(p);
           } else {
             setTitles.push(member[this.props.titleKey]);
-            sets.push([[modX, modY, radius]]);
+            sets.push([p]);
           }
+
+          sumX += modX;
+          sumY += modY;
+          sumXY += modX * modY;
+          sumXSquare += modX * modX;
         }
+        //calculate line of best fit (linear regression)
+        //y = mx + c
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
           }
         } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
+          if (_didIteratorError2) {
+            throw _iteratorError2;
           }
         }
       }
 
+      var numData = circleData.length;
+      var mVal = (numData * sumXY - sumX * sumY) / (numData * sumXSquare - sumX * sumX);
+      var cVal = (sumXSquare * sumY - sumX * sumXY) / (numData * sumXSquare - sumX * sumX);
+      var eq = { m: mVal, c: cVal };
+
       var numsets = setTitles.length;
       for (var i = 0; i < numsets; i++) {
-        chart.push(_react2.default.createElement(PointSeries, { points: sets[i], color: this.props.color[i % this.props.color.length] }));
+        var color = this.props.color[i % this.props.color.length];
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
+
+        try {
+          for (var _iterator3 = sets[i][Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var point = _step3.value;
+
+            if (point.f) {
+              point["color"] = color;
+            } else {
+              point["color"] = "#a6acad";
+            }
+
+            chart.push(_react2.default.createElement(PointSeries, { points: sets[i], color: color, equation: eq }));
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
+            }
+          }
+        }
       }
 
       chart.push(_react2.default.createElement(_Legend2.default, { key: "legend", x: chartX, y: chartY + chartHeight + buffer, width: chartWidth,
@@ -11158,6 +11243,7 @@ ScatterPlot.defaultProps = {
   circleKey: "default",
   maxRadius: 10,
   minRadius: 2.5,
+  filterBy: "none",
   scale: "default",
   xSteps: 4,
   xTicks: "off",
@@ -25753,13 +25839,14 @@ class CircleSizing {
     let radius
     if (this.circleKey == "default") {
       for (let member of this.data) {
-        radius = 2.5
+        radius = this.minRadius
         member["radius"] = radius
         newData.push(member)
       }
     } else {
       //circle radii get propotionally larger
       let stepSize = (this.maxRadius-this.minRadius)/(this.largestWeight-this.smallestWeight)
+
       for (let member of this.data) {
         if (member[this.circleKey] == this.smallestWeight) {
           radius = this.minRadius //smallest weight has minRadius
@@ -25770,17 +25857,11 @@ class CircleSizing {
           if (ratio > 0) {
             radius = this.minRadius + (ratio * stepSize)
           } else {
-            radius = -1 //ratio is negative = value was removed/zero, don't need to add this point
+            radius = 0 //ratio is negative = value was removed/zero
           }
         }
-        if (radius > 0) {
-          member["radius"] = radius
-          newData.push(member)
-        }
-        else {
-          member["radius"] = 0
-          newData.push(member)
-        }
+        member["radius"] = radius
+        newData.push(member)
       }
     }
     return newData
@@ -25893,11 +25974,6 @@ var KeyValueRow = function (_React$Component) {
   _createClass(KeyValueRow, [{
     key: "changeHandler",
     value: function changeHandler(e) {
-      // this.props.updateData({
-      //   continent: this.props.continent,
-      //   population: this.props.population,
-      //   averageAge: e.target.value,
-      // })
       this.props.updateData({
         gender: this.props.gender,
         height: this.props.height,
@@ -25913,18 +25989,6 @@ var KeyValueRow = function (_React$Component) {
           minWidth: "100px"
         }
       };
-
-      // return(
-      //   <tr key={this.props.continent.concat(this.props.population)}>
-      //     <td style={style.cell}>{this.props.continent} </td>
-      //     <td style={style.cell}>{this.props.population}</td>
-      //     <td style={style.cell}>{this.props.gdp}</td>
-      //     <td style={style.cell}>
-      //       <input style={{width:"50%"}} type="text" value={parseFloat(this.props.averageAge)}
-      //         onChange={this.changeHandler.bind(this)} />
-      //     </td>
-      //   </tr>
-      // )
 
       return _react2.default.createElement(
         "tr",
@@ -25980,13 +26044,6 @@ var KeyValueTable = function (_React$Component2) {
       try {
         for (var _iterator = this.props.data[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var dataPoint = _step.value;
-
-          // rows.push(
-          //   <KeyValueRow key={dataPoint.continent.concat(dataPoint.population)}
-          //     continent={dataPoint.continent} population={dataPoint.population}
-          //     gdp={dataPoint.gdp} averageAge={dataPoint.averageAge}
-          //     updateData={this.props.updateData.bind(this)} />
-          // )
 
           rows.push(_react2.default.createElement(KeyValueRow, {
             gender: dataPoint.gender, height: dataPoint.height,
@@ -26127,52 +26184,11 @@ var ExampleApp = function (_React$Component5) {
     var _this5 = _possibleConstructorReturn(this, (ExampleApp.__proto__ || Object.getPrototypeOf(ExampleApp)).call(this, props));
 
     _this5.state = {
-      // data: [
-      //   {continent: "S. America", country: "Brazil", population: 211243220, gdp: 2140940000, averageAge: 35},
-      //   {continent: "S. America", country: "Argentina", population: 44272125, gdp: 628935000, averageAge: 40},
-      //   {continent: "S. America", country: "Colombia", population: 49067981, gdp: 306439000, averageAge: 52},
-      //   {continent: "S. America", country: "Venezuela", population: 31925705, gdp: 251589000, averageAge: 45},
-      //   {continent: "S. America", country: "Chile", population: 18313495, gdp: 251220000, averageAge: 38},
-      //   {continent: "S. America", country: "Peru", population: 32166473, gdp: 207072000, averageAge: 46},
-      //   {continent: "Europe", country: "Germany", population: 80636124, gdp: 3423287000, averageAge: 56},
-      //   {continent: "Europe", country: "UK", population: 65511098, gdp: 2496757000, averageAge: 28},
-      //   {continent: "Europe", country: "France", population: 64938716, gdp: 2420440000, averageAge: 58},
-      //   {continent: "Europe", country: "Italy", population: 59797978, gdp: 1807425000, averageAge: 85},
-      //   {continent: "Europe", country: "Russia", population: 143375006, gdp: 1560706000, averageAge: 68},
-      //   {continent: "Europe", country: "Spain", population: 46070146, gdp: 1232440000, averageAge: 59},
-      //   {continent: "Africa", country: "Nigeria", population: 191835936, gdp: 400621000, averageAge: 30},
-      //   {continent: "Africa", country: "Egypt", population: 95215102, gdp: 332349000, averageAge: 64},
-      //   {continent: "Africa", country: "South Africa", population: 55436360, gdp: 317568000, averageAge: 57},
-      //   {continent: "Africa", country: "Algeria", population: 41063753, gdp: 173947000, averageAge: 57},
-      //   {continent: "Africa", country: "Angola", population: 26655513, gdp: 122365000, averageAge: 100},
-      //   {continent: "Africa", country: "Sudan", population: 42166323, gdp: 115874000, averageAge: 54},
-      //   {continent: "Asia", country: "China", population: 1388232693, gdp: 11795297000, averageAge: 78},
-      //   {continent: "Asia", country: "Japan", population: 126045211, gdp: 4841221000, averageAge: 45},
-      //   {continent: "Asia", country: "India", population: 1342512706, gdp: 2454458000, averageAge: 77},
-      //   {continent: "Asia", country: "South Korea", population: 50704971, gdp: 1498074000, averageAge: 50},
-      //   {continent: "Asia", country: "Indonesia", population: 263510146, gdp: 1020515000, averageAge: 88},
-      //   {continent: "Asia", country: "Saudi Arabia", population: 32742664, gdp: 707379000, averageAge: 54},
-      // ],
       data: [{ gender: "male", height: 70, weight: 155, shoeSize: 10 }, { gender: "male", height: 72, weight: 144, shoeSize: 12 }, { gender: "male", height: 73, weight: 158, shoeSize: 11.5 }, { gender: "male", height: 72, weight: 160, shoeSize: 11 }, { gender: "male", height: 77, weight: 186, shoeSize: 13 }, { gender: "male", height: 68, weight: 153, shoeSize: 10 }, { gender: "male", height: 69, weight: 160, shoeSize: 9 }, { gender: "male", height: 67, weight: 166, shoeSize: 9.5 }, { gender: "male", height: 64, weight: 169, shoeSize: 9 }, { gender: "male", height: 63, weight: 126, shoeSize: 9.5 }, { gender: "male", height: 66.5, weight: 120, shoeSize: 9 }, { gender: "male", height: 65.5, weight: 147, shoeSize: 11 }, { gender: "female", height: 60, weight: 90, shoeSize: 6 }, { gender: "female", height: 63.5, weight: 100, shoeSize: 6.5 }, { gender: "female", height: 62, weight: 102, shoeSize: 6.5 }, { gender: "female", height: 65, weight: 112, shoeSize: 7 }, { gender: "female", height: 59, weight: 90, shoeSize: 6 }, { gender: "female", height: 58.5, weight: 95, shoeSize: 5.5 }, { gender: "female", height: 61.5, weight: 115, shoeSize: 6 }, { gender: "female", height: 69, weight: 125, shoeSize: 8 }, { gender: "female", height: 70, weight: 135, shoeSize: 8.5 }, { gender: "female", height: 58.5, weight: 140, shoeSize: 4.5 }, { gender: "female", height: 68, weight: 158, shoeSize: 7.5 }, { gender: "female", height: 64, weight: 160, shoeSize: 7.5 }, { gender: "female", height: 65, weight: 130.5, shoeSize: 7 }],
       scale: "log"
     };
     return _this5;
   }
-
-  // updateData(mutatedObject) {
-  //   let mutatedData = JSON.parse(JSON.stringify(this.state.data))
-  //   let chosenIndex = -1
-  //   for (let index=0; index < mutatedData.length; index++) {
-  //     if (mutatedData[index].continent === mutatedObject.continent && mutatedData[index].population === mutatedObject.population) {
-  //       chosenIndex = index
-  //       break
-  //     }
-  //   }
-  //   if (chosenIndex > -1) {
-  //     mutatedData[chosenIndex].averageAge = parseFloat(mutatedObject.averageAge)
-  //     this.setState({data: mutatedData})
-  //   }
-  // }
 
   _createClass(ExampleApp, [{
     key: "updateData",
@@ -26222,11 +26238,6 @@ var ExampleApp = function (_React$Component5) {
 
   return ExampleApp;
 }(_react2.default.Component);
-
-// <ScatterPlot data={this.state.data}
-//   titleKey="continent" xKey="population" yKey="gdp" circleKey="averageAge"
-//   scale={this.state.scale} grid="default" legend="default" color={this.state.color}
-//   xLabel="on" yLabel="on"/>
 
 _reactDom2.default.render(_react2.default.createElement(ExampleApp, null), document.getElementById("react-app"));
 
