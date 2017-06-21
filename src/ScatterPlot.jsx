@@ -84,12 +84,14 @@ class ScatterPlot extends React.Component {
     if (yl != "off") {
       yl = this.props.yKey
     }
+
     chart.push(
       <Axis key={"axis"} x={chartX} y={chartY} width={chartWidth} height={chartHeight}
         color={this.props.axisColor} scale={this.props.scale} grid={this.props.grid}
         xLabel={xl} yLabel={yl}
         xSteps={this.props.xSteps} xTicks={this.props.xTicks} xAxisLine={this.props.xAxisLine}
         yTicks={this.props.yTicks} ySteps={Math.round((chartHeight)/50)+1} yAxisLine={this.props.yAxisLine}
+        yStart={this.props.yStart}
         maxX={maxX} minX={minX} maxY={maxY} minY={minY} />
     )
 
@@ -121,14 +123,10 @@ class ScatterPlot extends React.Component {
       let radius = member["radius"]
 
       let displayColor
-      if (this.props.filterBy !== "none") {
-        if (member[this.props.filterBy.prop] == this.props.filterBy.value) {
-          displayColor = true
-        } else {
-          displayColor = false
-        }
-      } else {
+      if (member[this.props.filterBy.prop] == this.props.filterBy.value) {
         displayColor = true
+      } else {
+        displayColor = false
       }
 
       let p = {x: modX, y: modY, r: radius, f: displayColor}
@@ -187,7 +185,7 @@ ScatterPlot.defaultProps = {
   circleKey: "default",
   maxRadius: 10,
   minRadius: 2.5,
-  filterBy: "none",
+  filterBy: "default",
   scale: "default",
   xSteps: 4,
   xTicks: "off",
@@ -197,6 +195,7 @@ ScatterPlot.defaultProps = {
   yTicks: "off",
   yAxisLine: "off",
   yLabel: "off",
+  yStart: "origin",
   grid: "default",
   legend: "default",
   legendColor: "#000000",

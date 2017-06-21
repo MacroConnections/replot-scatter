@@ -93,7 +93,7 @@ class YTickLabel extends React.Component {
 
   render() {
     let printVal = this.props.value
-    if (this.props.value >= 1) {
+    if (this.props.value >= 0) {
       printVal = Humanize.compactInteger(this.props.value,2)
     } else {
       printVal = this.props.value.toFixed(4)
@@ -123,7 +123,6 @@ class YStep extends React.Component {
           stroke={this.props.color} />
       )
     }
-
     step.push(
       <YTickLabel key={"label"+this.props.y} x={this.props.x-10} y={this.props.y} value={this.props.value} size={15} color={this.props.color} />
     )
@@ -157,31 +156,58 @@ class YAxis extends React.Component {
         </text>
       )
     }
-
-    let ySpace = this.props.height / (this.props.ySteps - 1)
-    for (var i=0; i < this.props.ySteps; i++) {
-      let tickPos = this.props.height+this.props.y-i*ySpace
-
-      let yVal = 0
-      if (this.props.scale == "log") {
-        let valueRatio = (Math.log10(this.props.maxY) - Math.log10(this.props.minY)) / (this.props.ySteps - 1)
-        let pow10 = Math.log10(this.props.minY) + i * valueRatio
-        yVal = Math.pow(10, pow10)
-      } else {
-        yVal = this.props.minY + i*(this.props.maxY-this.props.minY)/(this.props.ySteps-1)
-      }
+    if (this.props.yStart == "origin" && this.props.scale !== "log") {
       yAxis.push(
-        <YStep key={"ystep"+i} x={this.props.x} y={tickPos}
-          value={yVal} length={10} color={this.props.color} yTicks={this.props.yTicks} />
+        <YStep key={"ystep"+0} x={this.props.x} y={this.props.height+this.props.y}
+          value={0} length={10} color={this.props.color} yTicks={this.props.yTIcks} />
       )
+      let ySpace = this.props.height / (this.props.ySteps)
 
-      if (this.props.grid == "default") {
-        if (i != 0) {
+      for (var i=0; i < this.props.ySteps; i++) {
+        let tickPos = this.props.height+this.props.y-(i+1)*ySpace
+
+        let yVal = 0
+        yVal = (i+1)*(this.props.maxY)/(this.props.ySteps-1)
+        yAxis.push(
+          <YStep key={"ystep"+(i+1)} x={this.props.x} y={tickPos}
+            value={yVal} length={10} color={this.props.color} yTicks={this.props.yTicks} />
+        )
+
+        if (this.props.grid == "default") {
           yAxis.push(
             <Line key={"grid"+i} x1={this.props.x} y1={tickPos}
               x2={this.props.x+this.props.width} y2={tickPos}
               stroke={this.props.gridColor} strokeWidth={1} opacity={0.5} />
           )
+        }
+      }
+
+    } else {
+      let ySpace = this.props.height / (this.props.ySteps - 1)
+      for (var i=0; i < this.props.ySteps; i++) {
+        let tickPos = this.props.height+this.props.y-i*ySpace
+
+        let yVal = 0
+        if (this.props.scale == "log") {
+          let valueRatio = (Math.log10(this.props.maxY) - Math.log10(this.props.minY)) / (this.props.ySteps - 1)
+          let pow10 = Math.log10(this.props.minY) + i * valueRatio
+          yVal = Math.pow(10, pow10)
+        } else {
+          yVal = this.props.minY + i*(this.props.maxY-this.props.minY)/(this.props.ySteps-1)
+        }
+        yAxis.push(
+          <YStep key={"ystep"+i} x={this.props.x} y={tickPos}
+            value={yVal} length={10} color={this.props.color} yTicks={this.props.yTicks} />
+        )
+
+        if (this.props.grid == "default") {
+          if (i != 0) {
+            yAxis.push(
+              <Line key={"grid"+i} x1={this.props.x} y1={tickPos}
+                x2={this.props.x+this.props.width} y2={tickPos}
+                stroke={this.props.gridColor} strokeWidth={1} opacity={0.5} />
+            )
+          }
         }
       }
     }
@@ -212,7 +238,8 @@ class Axis extends React.Component {
         yLabel={this.props.yLabel} ySteps={this.props.ySteps} yTicks={this.props.yTicks}
         maxY={this.props.maxY} minY={this.props.minY}
         scale={this.props.scale} grid={this.props.grid} gridColor={this.props.gridColor}
-        color={this.props.color} yAxisLine={this.props.yAxisLine} />
+        color={this.props.color} yAxisLine={this.props.yAxisLine}
+        yStart={this.props.yStart}/>
     )
 
     return(
@@ -239,6 +266,7 @@ Axis.defaultProps = {
   ySteps: 5,
   yTicks: "off",
   yAxisLine: "off",
+  yStart: "origin",
   maxX: 100,
   minX: 0,
   maxY: 100,
