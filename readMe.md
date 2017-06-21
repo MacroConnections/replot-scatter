@@ -51,6 +51,14 @@ render() {
 
 Note: legend is automatically generated
 
+### Point Customization
+- `circleKey` defaults to `"default"`
+ 	- specify the property to determine the weights of the data points with (values must be numbers)
+	- radius sizes will increase/decrease relative to the point's weight
+	- `minRadius` defaults to `2.5` (if `circleKey` is not given, points default to `minRadius`)
+	- `maxRadius` defaults to `10`
+
+
 ## Future Implementation
 
 - `titleLabel` (string) defaults to `"title"`
@@ -78,6 +86,9 @@ Note: legend is automatically generated
 - `transpose`: defaults to `"no"`
 	- `"no"`: first value of tuple on x-axis, second value of tuple on y-axis
 	- `"yes"`: first value of tuple on y-axis, second value of tuple on x-axis
+- `yStart`: defaults to `origin`
+	- `"origin"`: y-axis starts at origin (for linear scale)
+	- `"break"`: y-axis starts at a a higher value (break in axis)
 
 ### Line Customization
 - `shape`: defaults to `"none"`
