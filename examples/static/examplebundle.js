@@ -10772,8 +10772,8 @@ var YAxis = function (_React$Component6) {
         for (var i = 0; i < this.props.ySteps; i++) {
           var tickPos = this.props.height + this.props.y - (i + 1) * ySpace;
 
-          var yVal = 0;
-          yVal = (i + 1) * this.props.maxY / (this.props.ySteps - 1);
+          var yVal = (i + 1) * this.props.maxY / (this.props.ySteps - 1);
+
           yAxis.push(_react2.default.createElement(YStep, { key: "ystep" + (i + 1), x: this.props.x, y: tickPos,
             value: yVal, length: 10, color: this.props.color, yTicks: this.props.yTicks }));
 
@@ -11123,11 +11123,18 @@ var ScatterPlot = function (_React$Component2) {
         yl = this.props.yKey;
       }
 
+      var yStep = void 0;
+      if (this.props.ySteps == "none") {
+        yStep = Math.round(chartHeight / 50) + 1;
+      } else {
+        yStep = this.props.ySteps;
+      }
+
       chart.push(_react2.default.createElement(_Axis2.default, { key: "axis", x: chartX, y: chartY, width: chartWidth, height: chartHeight,
         color: this.props.axisColor, scale: this.props.scale, grid: this.props.grid,
         xLabel: xl, yLabel: yl,
         xSteps: this.props.xSteps, xTicks: this.props.xTicks, xAxisLine: this.props.xAxisLine,
-        yTicks: this.props.yTicks, ySteps: Math.round(chartHeight / 50) + 1, yAxisLine: this.props.yAxisLine,
+        yTicks: this.props.yTicks, ySteps: yStep, yAxisLine: this.props.yAxisLine,
         yStart: this.props.yStart,
         maxX: maxX, minX: minX, maxY: maxY, minY: minY }));
 
@@ -11158,8 +11165,11 @@ var ScatterPlot = function (_React$Component2) {
           if (this.props.scale == "log") {
             var logDiff = Math.log10(parseFloat(member[this.props.yKey])) - Math.log10(minY);
             heightRatio = logDiff / (Math.log10(maxY) - Math.log10(minY));
-          } else {
+          } else if (this.props.yStart == "break") {
             heightRatio = (parseFloat(member[this.props.yKey]) - minY) / (maxY - minY);
+          } else {
+            var chartMaxY = yStep * maxY / (yStep - 1);
+            heightRatio = parseFloat(member[this.props.yKey]) / chartMaxY;
           }
           var modY = chartHeight - heightRatio * chartHeight + chartY;
 
@@ -11268,7 +11278,7 @@ ScatterPlot.defaultProps = {
   xTicks: "off",
   xAxisLine: "on",
   xLabel: "off",
-  ySteps: 7,
+  ySteps: "none", //if none. ySteps is calculated
   yTicks: "off",
   yAxisLine: "off",
   yLabel: "off",

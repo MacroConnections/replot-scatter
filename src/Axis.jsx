@@ -166,8 +166,8 @@ class YAxis extends React.Component {
       for (var i=0; i < this.props.ySteps; i++) {
         let tickPos = this.props.height+this.props.y-(i+1)*ySpace
 
-        let yVal = 0
-        yVal = (i+1)*(this.props.maxY)/(this.props.ySteps-1)
+        let yVal = (i+1)*(this.props.maxY)/(this.props.ySteps-1)
+
         yAxis.push(
           <YStep key={"ystep"+(i+1)} x={this.props.x} y={tickPos}
             value={yVal} length={10} color={this.props.color} yTicks={this.props.yTicks} />
