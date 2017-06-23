@@ -10682,7 +10682,7 @@ var YTickLabel = function (_React$Component4) {
     value: function render() {
       var printVal = this.props.value;
       if (this.props.value >= 0) {
-        printVal = _humanizePlus2.default.compactInteger(this.props.value, 2);
+        printVal = _humanizePlus2.default.compactInteger(Math.round(this.props.value), 2);
       } else {
         printVal = this.props.value.toFixed(4);
       }
@@ -10764,16 +10764,28 @@ var YAxis = function (_React$Component6) {
           this.props.yLabel
         ));
       }
-      if (this.props.yStart == "origin" && this.props.scale !== "log") {
-        yAxis.push(_react2.default.createElement(YStep, { key: "ystep" + 0, x: this.props.x, y: this.props.height + this.props.y,
-          value: 0, length: 10, color: this.props.color, yTicks: this.props.yTIcks }));
+      if (this.props.yStart == "origin") {
+        if (this.props.scale !== "log") {
+          yAxis.push(_react2.default.createElement(YStep, { key: "ystep" + 0, x: this.props.x, y: this.props.height + this.props.y,
+            value: 0, length: 10, color: this.props.color, yTicks: this.props.yTIcks }));
+        }
         var ySpace = this.props.height / this.props.ySteps;
 
         for (var i = 0; i < this.props.ySteps; i++) {
-          var tickPos = this.props.height + this.props.y - (i + 1) * ySpace;
+          var tickPos = void 0;
+          var yVal = void 0;
 
-          var yVal = (i + 1) * this.props.maxY / (this.props.ySteps - 1);
+          if (this.props.scale == "log") {
+            ySpace = this.props.height / (this.props.ySteps - 1);
+            var valueRatio = Math.log10(this.props.maxY) / (this.props.ySteps - 1);
+            var pow10 = Math.log10(1) + i * valueRatio;
+            yVal = Math.pow(10, pow10);
 
+            tickPos = this.props.height + this.props.y - i * ySpace;
+          } else {
+            yVal = (i + 1) * this.props.maxY / (this.props.ySteps - 1);
+            tickPos = this.props.height + this.props.y - (i + 1) * ySpace;
+          }
           yAxis.push(_react2.default.createElement(YStep, { key: "ystep" + (i + 1), x: this.props.x, y: tickPos,
             value: yVal, length: 10, color: this.props.color, yTicks: this.props.yTicks }));
 
@@ -10790,9 +10802,9 @@ var YAxis = function (_React$Component6) {
 
           var _yVal = 0;
           if (this.props.scale == "log") {
-            var valueRatio = (Math.log10(this.props.maxY) - Math.log10(this.props.minY)) / (this.props.ySteps - 1);
-            var pow10 = Math.log10(this.props.minY) + i * valueRatio;
-            _yVal = Math.pow(10, pow10);
+            var _valueRatio = (Math.log10(this.props.maxY) - Math.log10(this.props.minY)) / (this.props.ySteps - 1);
+            var _pow = Math.log10(this.props.minY) + i * _valueRatio;
+            _yVal = Math.pow(10, _pow);
           } else {
             _yVal = this.props.minY + i * (this.props.maxY - this.props.minY) / (this.props.ySteps - 1);
           }
@@ -11162,17 +11174,25 @@ var ScatterPlot = function (_React$Component2) {
           var modX = widthRatio * chartWidth + chartX;
 
           var heightRatio = 0;
-          if (this.props.scale == "log") {
+          var offset = void 0;
+          if (this.props.scale == "log" && this.props.yStart == "origin") {
+            var log = Math.log10(parseFloat(member[this.props.yKey]));
+
+            var valueRatio = Math.log10(maxY) / (yStep - 1);
+            var pow10 = (yStep - 1) * valueRatio;
+            var chartMaxY = Math.pow(10, pow10);
+
+            heightRatio = log / Math.log10(chartMaxY);
+          } else if (this.props.scale == "log" && this.props.yStart == "break") {
             var logDiff = Math.log10(parseFloat(member[this.props.yKey])) - Math.log10(minY);
             heightRatio = logDiff / (Math.log10(maxY) - Math.log10(minY));
-          } else if (this.props.yStart == "break") {
+          } else if (this.props.scale == "default" && this.props.yStart == "break") {
             heightRatio = (parseFloat(member[this.props.yKey]) - minY) / (maxY - minY);
           } else {
-            var chartMaxY = yStep * maxY / (yStep - 1);
-            heightRatio = parseFloat(member[this.props.yKey]) / chartMaxY;
+            var _chartMaxY = yStep * maxY / (yStep - 1);
+            heightRatio = parseFloat(member[this.props.yKey]) / _chartMaxY;
           }
           var modY = chartHeight - heightRatio * chartHeight + chartY;
-
           var radius = member["radius"];
 
           var displayColor = void 0;
@@ -11282,7 +11302,7 @@ ScatterPlot.defaultProps = {
   yTicks: "off",
   yAxisLine: "off",
   yLabel: "off",
-  yStart: "origin",
+  yStart: "break",
   grid: "default",
   legend: "default",
   legendColor: "#000000",

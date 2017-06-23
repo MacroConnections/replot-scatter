@@ -1130,11 +1130,20 @@ var ScatterPlot = function (_React$Component2) {
       if (yl != "off") {
         yl = this.props.yKey;
       }
+
+      var yStep = void 0;
+      if (this.props.ySteps == "none") {
+        yStep = Math.round(chartHeight / 50) + 1;
+      } else {
+        yStep = this.props.ySteps;
+      }
+
       chart.push(_react2.default.createElement(_Axis2.default, { key: "axis", x: chartX, y: chartY, width: chartWidth, height: chartHeight,
         color: this.props.axisColor, scale: this.props.scale, grid: this.props.grid,
         xLabel: xl, yLabel: yl,
         xSteps: this.props.xSteps, xTicks: this.props.xTicks, xAxisLine: this.props.xAxisLine,
-        yTicks: this.props.yTicks, ySteps: Math.round(chartHeight / 50) + 1, yAxisLine: this.props.yAxisLine,
+        yTicks: this.props.yTicks, ySteps: yStep, yAxisLine: this.props.yAxisLine,
+        yStart: this.props.yStart,
         maxX: maxX, minX: minX, maxY: maxY, minY: minY }));
 
       var sets = [];
@@ -1161,14 +1170,25 @@ var ScatterPlot = function (_React$Component2) {
           var modX = widthRatio * chartWidth + chartX;
 
           var heightRatio = 0;
-          if (this.props.scale == "log") {
+          var offset = void 0;
+          if (this.props.scale == "log" && this.props.yStart == "origin") {
+            var log = Math.log10(parseFloat(member[this.props.yKey]));
+
+            var valueRatio = Math.log10(maxY) / (yStep - 1);
+            var pow10 = (yStep - 1) * valueRatio;
+            var chartMaxY = Math.pow(10, pow10);
+
+            heightRatio = log / Math.log10(chartMaxY);
+          } else if (this.props.scale == "log" && this.props.yStart == "break") {
             var logDiff = Math.log10(parseFloat(member[this.props.yKey])) - Math.log10(minY);
             heightRatio = logDiff / (Math.log10(maxY) - Math.log10(minY));
-          } else {
+          } else if (this.props.scale == "default" && this.props.yStart == "break") {
             heightRatio = (parseFloat(member[this.props.yKey]) - minY) / (maxY - minY);
+          } else {
+            var _chartMaxY = yStep * maxY / (yStep - 1);
+            heightRatio = parseFloat(member[this.props.yKey]) / _chartMaxY;
           }
           var modY = chartHeight - heightRatio * chartHeight + chartY;
-
           var radius = member["radius"];
 
           var displayColor = void 0;
@@ -1268,16 +1288,17 @@ ScatterPlot.defaultProps = {
   circleKey: "default",
   maxRadius: 10,
   minRadius: 2.5,
-  filterBy: { prop: "gender", value: "male" },
+  filterBy: "default",
   scale: "default",
   xSteps: 4,
   xTicks: "off",
   xAxisLine: "on",
   xLabel: "off",
-  ySteps: 7,
+  ySteps: "none", //if none. ySteps is calculated
   yTicks: "off",
   yAxisLine: "off",
   yLabel: "off",
+  yStart: "break",
   grid: "default",
   legend: "default",
   legendColor: "#000000",
@@ -1452,8 +1473,8 @@ var YTickLabel = function (_React$Component4) {
     key: "render",
     value: function render() {
       var printVal = this.props.value;
-      if (this.props.value >= 1) {
-        printVal = _humanizePlus2.default.compactInteger(this.props.value, 2);
+      if (this.props.value >= 0) {
+        printVal = _humanizePlus2.default.compactInteger(Math.round(this.props.value), 2);
       } else {
         printVal = this.props.value.toFixed(4);
       }
@@ -1493,7 +1514,6 @@ var YStep = function (_React$Component5) {
           x2: this.props.x - this.props.length, y2: this.props.y,
           stroke: this.props.color }));
       }
-
       step.push(_react2.default.createElement(YTickLabel, { key: "label" + this.props.y, x: this.props.x - 10, y: this.props.y, value: this.props.value, size: 15, color: this.props.color }));
       return _react2.default.createElement(
         "g",
@@ -1536,27 +1556,59 @@ var YAxis = function (_React$Component6) {
           this.props.yLabel
         ));
       }
-
-      var ySpace = this.props.height / (this.props.ySteps - 1);
-      for (var i = 0; i < this.props.ySteps; i++) {
-        var tickPos = this.props.height + this.props.y - i * ySpace;
-
-        var yVal = 0;
-        if (this.props.scale == "log") {
-          var valueRatio = (Math.log10(this.props.maxY) - Math.log10(this.props.minY)) / (this.props.ySteps - 1);
-          var pow10 = Math.log10(this.props.minY) + i * valueRatio;
-          yVal = Math.pow(10, pow10);
-        } else {
-          yVal = this.props.minY + i * (this.props.maxY - this.props.minY) / (this.props.ySteps - 1);
+      if (this.props.yStart == "origin") {
+        if (this.props.scale !== "log") {
+          yAxis.push(_react2.default.createElement(YStep, { key: "ystep" + 0, x: this.props.x, y: this.props.height + this.props.y,
+            value: 0, length: 10, color: this.props.color, yTicks: this.props.yTIcks }));
         }
-        yAxis.push(_react2.default.createElement(YStep, { key: "ystep" + i, x: this.props.x, y: tickPos,
-          value: yVal, length: 10, color: this.props.color, yTicks: this.props.yTicks }));
+        var ySpace = this.props.height / this.props.ySteps;
 
-        if (this.props.grid == "default") {
-          if (i != 0) {
+        for (var i = 0; i < this.props.ySteps; i++) {
+          var tickPos = void 0;
+          var yVal = void 0;
+
+          if (this.props.scale == "log") {
+            ySpace = this.props.height / (this.props.ySteps - 1);
+            var valueRatio = Math.log10(this.props.maxY) / (this.props.ySteps - 1);
+            var pow10 = Math.log10(1) + i * valueRatio;
+            yVal = Math.pow(10, pow10);
+
+            tickPos = this.props.height + this.props.y - i * ySpace;
+          } else {
+            yVal = (i + 1) * this.props.maxY / (this.props.ySteps - 1);
+            tickPos = this.props.height + this.props.y - (i + 1) * ySpace;
+          }
+          yAxis.push(_react2.default.createElement(YStep, { key: "ystep" + (i + 1), x: this.props.x, y: tickPos,
+            value: yVal, length: 10, color: this.props.color, yTicks: this.props.yTicks }));
+
+          if (this.props.grid == "default") {
             yAxis.push(_react2.default.createElement(_Line2.default, { key: "grid" + i, x1: this.props.x, y1: tickPos,
               x2: this.props.x + this.props.width, y2: tickPos,
               stroke: this.props.gridColor, strokeWidth: 1, opacity: 0.5 }));
+          }
+        }
+      } else {
+        var _ySpace = this.props.height / (this.props.ySteps - 1);
+        for (var i = 0; i < this.props.ySteps; i++) {
+          var _tickPos = this.props.height + this.props.y - i * _ySpace;
+
+          var _yVal = 0;
+          if (this.props.scale == "log") {
+            var _valueRatio = (Math.log10(this.props.maxY) - Math.log10(this.props.minY)) / (this.props.ySteps - 1);
+            var _pow = Math.log10(this.props.minY) + i * _valueRatio;
+            _yVal = Math.pow(10, _pow);
+          } else {
+            _yVal = this.props.minY + i * (this.props.maxY - this.props.minY) / (this.props.ySteps - 1);
+          }
+          yAxis.push(_react2.default.createElement(YStep, { key: "ystep" + i, x: this.props.x, y: _tickPos,
+            value: _yVal, length: 10, color: this.props.color, yTicks: this.props.yTicks }));
+
+          if (this.props.grid == "default") {
+            if (i != 0) {
+              yAxis.push(_react2.default.createElement(_Line2.default, { key: "grid" + i, x1: this.props.x, y1: _tickPos,
+                x2: this.props.x + this.props.width, y2: _tickPos,
+                stroke: this.props.gridColor, strokeWidth: 1, opacity: 0.5 }));
+            }
           }
         }
       }
@@ -1597,7 +1649,8 @@ var Axis = function (_React$Component7) {
         yLabel: this.props.yLabel, ySteps: this.props.ySteps, yTicks: this.props.yTicks,
         maxY: this.props.maxY, minY: this.props.minY,
         scale: this.props.scale, grid: this.props.grid, gridColor: this.props.gridColor,
-        color: this.props.color, yAxisLine: this.props.yAxisLine }));
+        color: this.props.color, yAxisLine: this.props.yAxisLine,
+        yStart: this.props.yStart }));
 
       return _react2.default.createElement(
         "g",
@@ -1627,6 +1680,7 @@ Axis.defaultProps = {
   ySteps: 5,
   yTicks: "off",
   yAxisLine: "off",
+  yStart: "origin",
   maxX: 100,
   minX: 0,
   maxY: 100,
