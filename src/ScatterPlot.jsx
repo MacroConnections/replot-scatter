@@ -119,17 +119,25 @@ class ScatterPlot extends React.Component {
       let modX = widthRatio*chartWidth + chartX
 
       let heightRatio = 0
-      if (this.props.scale == "log") {
+      let offset
+      if (this.props.scale == "log" && this.props.yStart == "origin") {
+        let log = (Math.log10(parseFloat(member[this.props.yKey])))
+
+        let valueRatio = (Math.log10(maxY)) / (yStep - 1)
+        let pow10 = (yStep-1) * valueRatio
+        let chartMaxY = Math.pow(10, pow10)
+
+        heightRatio = log / (Math.log10(chartMaxY))
+      } else if (this.props.scale == "log" && this.props.yStart == "break"){
         let logDiff = (Math.log10(parseFloat(member[this.props.yKey]))-Math.log10(minY))
         heightRatio = logDiff / (Math.log10(maxY)-Math.log10(minY))
-      } else if (this.props.yStart == "break") {
+      } else if (this.props.scale == "default" &&this.props.yStart == "break") {
         heightRatio = (parseFloat(member[this.props.yKey])-minY) / (maxY-minY)
       } else {
         let chartMaxY = yStep*(maxY)/(yStep-1)
         heightRatio = (parseFloat(member[this.props.yKey])) / chartMaxY
       }
-      let modY = chartHeight - heightRatio*chartHeight + chartY
-
+      let modY = (chartHeight) - heightRatio*chartHeight + chartY
       let radius = member["radius"]
 
       let displayColor
@@ -205,7 +213,7 @@ ScatterPlot.defaultProps = {
   yTicks: "off",
   yAxisLine: "off",
   yLabel: "off",
-  yStart: "origin",
+  yStart: "break",
   grid: "default",
   legend: "default",
   legendColor: "#000000",

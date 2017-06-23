@@ -10682,7 +10682,7 @@ var YTickLabel = function (_React$Component4) {
     value: function render() {
       var printVal = this.props.value;
       if (this.props.value >= 0) {
-        printVal = _humanizePlus2.default.compactInteger(this.props.value, 2);
+        printVal = _humanizePlus2.default.compactInteger(Math.round(this.props.value), 2);
       } else {
         printVal = this.props.value.toFixed(4);
       }
@@ -10764,16 +10764,28 @@ var YAxis = function (_React$Component6) {
           this.props.yLabel
         ));
       }
-      if (this.props.yStart == "origin" && this.props.scale !== "log") {
-        yAxis.push(_react2.default.createElement(YStep, { key: "ystep" + 0, x: this.props.x, y: this.props.height + this.props.y,
-          value: 0, length: 10, color: this.props.color, yTicks: this.props.yTIcks }));
+      if (this.props.yStart == "origin") {
+        if (this.props.scale !== "log") {
+          yAxis.push(_react2.default.createElement(YStep, { key: "ystep" + 0, x: this.props.x, y: this.props.height + this.props.y,
+            value: 0, length: 10, color: this.props.color, yTicks: this.props.yTIcks }));
+        }
         var ySpace = this.props.height / this.props.ySteps;
 
         for (var i = 0; i < this.props.ySteps; i++) {
-          var tickPos = this.props.height + this.props.y - (i + 1) * ySpace;
+          var tickPos = void 0;
+          var yVal = void 0;
 
-          var yVal = (i + 1) * this.props.maxY / (this.props.ySteps - 1);
+          if (this.props.scale == "log") {
+            ySpace = this.props.height / (this.props.ySteps - 1);
+            var valueRatio = Math.log10(this.props.maxY) / (this.props.ySteps - 1);
+            var pow10 = Math.log10(1) + i * valueRatio;
+            yVal = Math.pow(10, pow10);
 
+            tickPos = this.props.height + this.props.y - i * ySpace;
+          } else {
+            yVal = (i + 1) * this.props.maxY / (this.props.ySteps - 1);
+            tickPos = this.props.height + this.props.y - (i + 1) * ySpace;
+          }
           yAxis.push(_react2.default.createElement(YStep, { key: "ystep" + (i + 1), x: this.props.x, y: tickPos,
             value: yVal, length: 10, color: this.props.color, yTicks: this.props.yTicks }));
 
@@ -10790,9 +10802,9 @@ var YAxis = function (_React$Component6) {
 
           var _yVal = 0;
           if (this.props.scale == "log") {
-            var valueRatio = (Math.log10(this.props.maxY) - Math.log10(this.props.minY)) / (this.props.ySteps - 1);
-            var pow10 = Math.log10(this.props.minY) + i * valueRatio;
-            _yVal = Math.pow(10, pow10);
+            var _valueRatio = (Math.log10(this.props.maxY) - Math.log10(this.props.minY)) / (this.props.ySteps - 1);
+            var _pow = Math.log10(this.props.minY) + i * _valueRatio;
+            _yVal = Math.pow(10, _pow);
           } else {
             _yVal = this.props.minY + i * (this.props.maxY - this.props.minY) / (this.props.ySteps - 1);
           }
@@ -11162,17 +11174,25 @@ var ScatterPlot = function (_React$Component2) {
           var modX = widthRatio * chartWidth + chartX;
 
           var heightRatio = 0;
-          if (this.props.scale == "log") {
+          var offset = void 0;
+          if (this.props.scale == "log" && this.props.yStart == "origin") {
+            var log = Math.log10(parseFloat(member[this.props.yKey]));
+
+            var valueRatio = Math.log10(maxY) / (yStep - 1);
+            var pow10 = (yStep - 1) * valueRatio;
+            var chartMaxY = Math.pow(10, pow10);
+
+            heightRatio = log / Math.log10(chartMaxY);
+          } else if (this.props.scale == "log" && this.props.yStart == "break") {
             var logDiff = Math.log10(parseFloat(member[this.props.yKey])) - Math.log10(minY);
             heightRatio = logDiff / (Math.log10(maxY) - Math.log10(minY));
-          } else if (this.props.yStart == "break") {
+          } else if (this.props.scale == "default" && this.props.yStart == "break") {
             heightRatio = (parseFloat(member[this.props.yKey]) - minY) / (maxY - minY);
           } else {
-            var chartMaxY = yStep * maxY / (yStep - 1);
-            heightRatio = parseFloat(member[this.props.yKey]) / chartMaxY;
+            var _chartMaxY = yStep * maxY / (yStep - 1);
+            heightRatio = parseFloat(member[this.props.yKey]) / _chartMaxY;
           }
           var modY = chartHeight - heightRatio * chartHeight + chartY;
-
           var radius = member["radius"];
 
           var displayColor = void 0;
@@ -11282,7 +11302,7 @@ ScatterPlot.defaultProps = {
   yTicks: "off",
   yAxisLine: "off",
   yLabel: "off",
-  yStart: "origin",
+  yStart: "break",
   grid: "default",
   legend: "default",
   legendColor: "#000000",
@@ -26211,6 +26231,32 @@ var ExampleApp = function (_React$Component5) {
 
     _this5.state = {
       data: [{ continent: "Asia", country: "China", population: 1388232693, gdp: 11795297000 }, { continent: "Asia", country: "Japan", population: 126045211, gdp: 4841221000 }, { continent: "Asia", country: "India", population: 1342512706, gdp: 2454458000 }, { continent: "Asia", country: "South Korea", population: 50704971, gdp: 1498074000 }, { continent: "Asia", country: "Indonesia", population: 263510146, gdp: 1020515000 }, { continent: "Asia", country: "Saudi Arabia", population: 32742664, gdp: 707379000 }, { continent: "S. America", country: "Brazil", population: 211243220, gdp: 2140940000 }, { continent: "S. America", country: "Argentina", population: 44272125, gdp: 628935000 }, { continent: "S. America", country: "Colombia", population: 49067981, gdp: 306439000 }, { continent: "S. America", country: "Venezuela", population: 31925705, gdp: 251589000 }, { continent: "S. America", country: "Chile", population: 18313495, gdp: 251220000 }, { continent: "S. America", country: "Peru", population: 32166473, gdp: 207072000 }, { continent: "Europe", country: "Germany", population: 80636124, gdp: 3423287000 }, { continent: "Europe", country: "UK", population: 65511098, gdp: 2496757000 }, { continent: "Europe", country: "France", population: 64938716, gdp: 2420440000 }, { continent: "Europe", country: "Italy", population: 59797978, gdp: 1807425000 }, { continent: "Europe", country: "Russia", population: 143375006, gdp: 1560706000 }, { continent: "Europe", country: "Spain", population: 46070146, gdp: 1232440000 }, { continent: "Africa", country: "Nigeria", population: 191835936, gdp: 400621000 }, { continent: "Africa", country: "Egypt", population: 95215102, gdp: 332349000 }, { continent: "Africa", country: "South Africa", population: 55436360, gdp: 317568000 }, { continent: "Africa", country: "Algeria", population: 41063753, gdp: 173947000 }, { continent: "Africa", country: "Angola", population: 26655513, gdp: 122365000 }, { continent: "Africa", country: "Sudan", population: 42166323, gdp: 115874000 }],
+      // data: [
+      //   {continent: "Asia", country: "China", population: 1, gdp: 1},
+      //   {continent: "Asia", country: "Japan", population: 2, gdp: 2},
+      //   {continent: "Asia", country: "India", population: 3, gdp: 3},
+      //   {continent: "Asia", country: "South Korea", population: 4, gdp: 4},
+      //   {continent: "Asia", country: "Indonesia", population: 5, gdp: 5},
+      //   {continent: "Asia", country: "Saudi Arabia", population: 6, gdp: 6},
+      //   {continent: "S. America", country: "Brazil", population: 7, gdp: 7},
+      //   {continent: "S. America", country: "Argentina", population: 8, gdp: 8},
+      //   {continent: "S. America", country: "Colombia", population: 9, gdp: 9},
+      //   {continent: "S. America", country: "Venezuela", population: 10, gdp: 10},
+      //   {continent: "S. America", country: "Chile", population: 11, gdp: 11},
+      //   {continent: "S. America", country: "Peru", population: 12, gdp: 12},
+      //   {continent: "Europe", country: "Germany", population: 13, gdp: 13},
+      //   {continent: "Europe", country: "UK", population: 14, gdp: 14},
+      //   {continent: "Europe", country: "France", population: 15, gdp: 15},
+      //   {continent: "Europe", country: "Italy", population: 16, gdp: 16},
+      //   {continent: "Europe", country: "Russia", population: 17, gdp: 17},
+      //   {continent: "Europe", country: "Spain", population: 18, gdp: 18},
+      //   {continent: "Africa", country: "Nigeria", population: 19, gdp: 19},
+      //   {continent: "Africa", country: "Egypt", population: 20, gdp: 20},
+      //   {continent: "Africa", country: "South Africa", population: 21, gdp: 21},
+      //   {continent: "Africa", country: "Algeria", population: 22, gdp: 22},
+      //   {continent: "Africa", country: "Angola", population: 23, gdp: 23},
+      //   {continent: "Africa", country: "Sudan", population: 24, gdp: 24},
+      // ],
       scale: "log"
     };
     return _this5;

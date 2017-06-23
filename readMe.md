@@ -86,9 +86,9 @@ Note: legend is automatically generated
 - `transpose`: defaults to `"no"`
 	- `"no"`: first value of tuple on x-axis, second value of tuple on y-axis
 	- `"yes"`: first value of tuple on y-axis, second value of tuple on x-axis
-- `yStart`: defaults to `origin`
+- `yStart`: defaults to `break`
 	- `"origin"`: y-axis starts at origin (for linear scale)
-	- `"break"`: y-axis starts at a a higher value (break in axis)
+	- `"break"`: y-axis starts at the lowest y-value in dataset (break in axis)
 
 ### Line Customization
 - `shape`: defaults to `"none"`

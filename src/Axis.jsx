@@ -94,7 +94,7 @@ class YTickLabel extends React.Component {
   render() {
     let printVal = this.props.value
     if (this.props.value >= 0) {
-      printVal = Humanize.compactInteger(this.props.value,2)
+      printVal = Humanize.compactInteger(Math.round(this.props.value),2)
     } else {
       printVal = this.props.value.toFixed(4)
     }
@@ -156,18 +156,30 @@ class YAxis extends React.Component {
         </text>
       )
     }
-    if (this.props.yStart == "origin" && this.props.scale !== "log") {
-      yAxis.push(
-        <YStep key={"ystep"+0} x={this.props.x} y={this.props.height+this.props.y}
-          value={0} length={10} color={this.props.color} yTicks={this.props.yTIcks} />
-      )
+    if (this.props.yStart == "origin") {
+      if (this.props.scale !== "log") {
+        yAxis.push(
+          <YStep key={"ystep"+0} x={this.props.x} y={this.props.height+this.props.y}
+            value={0} length={10} color={this.props.color} yTicks={this.props.yTIcks} />
+        )
+      }
       let ySpace = this.props.height / (this.props.ySteps)
 
       for (var i=0; i < this.props.ySteps; i++) {
-        let tickPos = this.props.height+this.props.y-(i+1)*ySpace
+        let tickPos
+        let yVal
 
-        let yVal = (i+1)*(this.props.maxY)/(this.props.ySteps-1)
+        if (this.props.scale == "log") {
+          ySpace = this.props.height / (this.props.ySteps - 1)
+          let valueRatio = (Math.log10(this.props.maxY)) / (this.props.ySteps - 1)
+          let pow10 = Math.log10(1) + (i) * valueRatio
+          yVal = Math.pow(10, pow10)
 
+          tickPos = this.props.height+this.props.y-(i)*ySpace
+        } else {
+          yVal = (i+1)*(this.props.maxY)/(this.props.ySteps-1)
+          tickPos = this.props.height+this.props.y-(i+1)*ySpace
+        }
         yAxis.push(
           <YStep key={"ystep"+(i+1)} x={this.props.x} y={tickPos}
             value={yVal} length={10} color={this.props.color} yTicks={this.props.yTicks} />
