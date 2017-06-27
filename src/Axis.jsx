@@ -172,7 +172,12 @@ class YAxis extends React.Component {
         if (this.props.scale == "log") {
           ySpace = this.props.height / (this.props.ySteps - 1)
           let valueRatio = (Math.log10(this.props.maxY)) / (this.props.ySteps - 1)
-          let pow10 = Math.log10(1) + (i) * valueRatio
+          let pow10
+          if (this.props.minY < 1) {
+            pow10 = Math.log10(this.props.minY) + (i) * valueRatio
+          } else {
+            pow10 = Math.log(1) + i * valueRatio
+          }
           yVal = Math.pow(10, pow10)
 
           tickPos = this.props.height+this.props.y-(i)*ySpace

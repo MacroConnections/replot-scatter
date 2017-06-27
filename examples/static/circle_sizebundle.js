@@ -10778,7 +10778,12 @@ var YAxis = function (_React$Component6) {
           if (this.props.scale == "log") {
             ySpace = this.props.height / (this.props.ySteps - 1);
             var valueRatio = Math.log10(this.props.maxY) / (this.props.ySteps - 1);
-            var pow10 = Math.log10(1) + i * valueRatio;
+            var pow10 = void 0;
+            if (this.props.minY < 1) {
+              pow10 = Math.log10(this.props.minY) + i * valueRatio;
+            } else {
+              pow10 = Math.log(1) + i * valueRatio;
+            }
             yVal = Math.pow(10, pow10);
 
             tickPos = this.props.height + this.props.y - i * ySpace;
@@ -11302,7 +11307,7 @@ ScatterPlot.defaultProps = {
   yTicks: "off",
   yAxisLine: "off",
   yLabel: "off",
-  yStart: "break",
+  yStart: "origin",
   grid: "default",
   legend: "default",
   legendColor: "#000000",
