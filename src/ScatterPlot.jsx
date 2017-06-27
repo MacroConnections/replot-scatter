@@ -213,7 +213,7 @@ ScatterPlot.defaultProps = {
   yTicks: "off",
   yAxisLine: "off",
   yLabel: "off",
-  yStart: "break",
+  yStart: "origin",
   grid: "default",
   legend: "default",
   legendColor: "#000000",
