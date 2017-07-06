@@ -1,10 +1,11 @@
 class CircleSizing {
-  constructor(data, circleKey, maxRadius, minRadius) {
+  constructor(data, circleKey, maxRadius, minRadius, yKey) {
     this.data = data
     this.circleKey = circleKey
     this.maxRadius = maxRadius
     this.minRadius = minRadius
 
+    this.yKey = yKey
     this.smallestWeight = Infinity
     this.largestWeight = 0
 

@@ -1212,7 +1212,7 @@ var CallbackQueue = __webpack_require__(67);
 var PooledClass = __webpack_require__(15);
 var ReactFeatureFlags = __webpack_require__(72);
 var ReactReconciler = __webpack_require__(20);
-var Transaction = __webpack_require__(30);
+var Transaction = __webpack_require__(31);
 
 var invariant = __webpack_require__(1);
 
@@ -2121,7 +2121,7 @@ var _assign = __webpack_require__(4);
 var ReactCurrentOwner = __webpack_require__(11);
 
 var warning = __webpack_require__(2);
-var canDefineProperty = __webpack_require__(34);
+var canDefineProperty = __webpack_require__(35);
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 
 var REACT_ELEMENT_TYPE = __webpack_require__(88);
@@ -2534,7 +2534,7 @@ module.exports = emptyObject;
 
 
 var DOMNamespaces = __webpack_require__(40);
-var setInnerHTML = __webpack_require__(32);
+var setInnerHTML = __webpack_require__(33);
 
 var createMicrosoftUnsafeLocalFunction = __webpack_require__(47);
 var setTextContent = __webpack_require__(85);
@@ -2849,7 +2849,7 @@ var createFactory = ReactElement.createFactory;
 var cloneElement = ReactElement.cloneElement;
 
 if (process.env.NODE_ENV !== 'production') {
-  var canDefineProperty = __webpack_require__(34);
+  var canDefineProperty = __webpack_require__(35);
   var ReactElementValidator = __webpack_require__(89);
   var didWarnPropTypesDeprecated = false;
   createElement = ReactElementValidator.createElement;
@@ -2942,7 +2942,7 @@ module.exports = React;
 
 var _prodInvariant = __webpack_require__(3);
 
-var EventPluginRegistry = __webpack_require__(27);
+var EventPluginRegistry = __webpack_require__(28);
 var EventPluginUtils = __webpack_require__(41);
 var ReactErrorUtils = __webpack_require__(45);
 
@@ -3507,6 +3507,43 @@ module.exports = SyntheticUIEvent;
 /* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+if (process.env.NODE_ENV !== 'production') {
+  var REACT_ELEMENT_TYPE = (typeof Symbol === 'function' &&
+    Symbol.for &&
+    Symbol.for('react.element')) ||
+    0xeac7;
+
+  var isValidElement = function(object) {
+    return typeof object === 'object' &&
+      object !== null &&
+      object.$$typeof === REACT_ELEMENT_TYPE;
+  };
+
+  // By explicitly using `prop-types` you are opting into new development behavior.
+  // http://fb.me/prop-types-in-prod
+  var throwOnDirectAccess = true;
+  module.exports = __webpack_require__(64)(isValidElement, throwOnDirectAccess);
+} else {
+  // By explicitly using `prop-types` you are opting into new production behavior.
+  // http://fb.me/prop-types-in-prod
+  module.exports = __webpack_require__(115)();
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
  * Copyright 2013-present, Facebook, Inc.
@@ -3765,7 +3802,7 @@ module.exports = EventPluginRegistry;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3783,7 +3820,7 @@ module.exports = EventPluginRegistry;
 
 var _assign = __webpack_require__(4);
 
-var EventPluginRegistry = __webpack_require__(27);
+var EventPluginRegistry = __webpack_require__(28);
 var ReactEventEmitterMixin = __webpack_require__(148);
 var ViewportMetrics = __webpack_require__(78);
 
@@ -4098,7 +4135,7 @@ var ReactBrowserEventEmitter = _assign({}, ReactEventEmitterMixin, {
 module.exports = ReactBrowserEventEmitter;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4175,7 +4212,7 @@ SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 module.exports = SyntheticMouseEvent;
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4406,7 +4443,7 @@ module.exports = TransactionImpl;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4534,7 +4571,7 @@ function escapeTextContentForBrowser(text) {
 module.exports = escapeTextContentForBrowser;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4637,7 +4674,7 @@ if (ExecutionEnvironment.canUseDOM) {
 module.exports = setInnerHTML;
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4664,7 +4701,7 @@ function stripStyle(style) {
 module.exports = exports['default'];
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4696,7 +4733,7 @@ module.exports = canDefineProperty;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4726,7 +4763,7 @@ module.exports = factory(
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4797,43 +4834,6 @@ function shallowEqual(objA, objB) {
 }
 
 module.exports = shallowEqual;
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(process) {/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
-
-if (process.env.NODE_ENV !== 'production') {
-  var REACT_ELEMENT_TYPE = (typeof Symbol === 'function' &&
-    Symbol.for &&
-    Symbol.for('react.element')) ||
-    0xeac7;
-
-  var isValidElement = function(object) {
-    return typeof object === 'object' &&
-      object !== null &&
-      object.$$typeof === REACT_ELEMENT_TYPE;
-  };
-
-  // By explicitly using `prop-types` you are opting into new development behavior.
-  // http://fb.me/prop-types-in-prod
-  var throwOnDirectAccess = true;
-  module.exports = __webpack_require__(64)(isValidElement, throwOnDirectAccess);
-} else {
-  // By explicitly using `prop-types` you are opting into new production behavior.
-  // http://fb.me/prop-types-in-prod
-  module.exports = __webpack_require__(115)();
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 38 */
@@ -4937,7 +4937,7 @@ var ReactDOMComponentTree = __webpack_require__(5);
 var ReactInstrumentation = __webpack_require__(9);
 
 var createMicrosoftUnsafeLocalFunction = __webpack_require__(47);
-var setInnerHTML = __webpack_require__(32);
+var setInnerHTML = __webpack_require__(33);
 var setTextContent = __webpack_require__(85);
 
 function getNodeAfter(parentNode, node) {
@@ -6793,7 +6793,7 @@ var _prodInvariant = __webpack_require__(17);
 
 var ReactNoopUpdateQueue = __webpack_require__(58);
 
-var canDefineProperty = __webpack_require__(34);
+var canDefineProperty = __webpack_require__(35);
 var emptyObject = __webpack_require__(18);
 var invariant = __webpack_require__(1);
 var warning = __webpack_require__(2);
@@ -8803,7 +8803,7 @@ var _prodInvariant = __webpack_require__(3);
 var DOMLazyTree = __webpack_require__(19);
 var DOMProperty = __webpack_require__(14);
 var React = __webpack_require__(21);
-var ReactBrowserEventEmitter = __webpack_require__(28);
+var ReactBrowserEventEmitter = __webpack_require__(29);
 var ReactCurrentOwner = __webpack_require__(11);
 var ReactDOMComponentTree = __webpack_require__(5);
 var ReactDOMContainerInfo = __webpack_require__(131);
@@ -8819,7 +8819,7 @@ var ReactUpdates = __webpack_require__(10);
 var emptyObject = __webpack_require__(18);
 var instantiateReactComponent = __webpack_require__(83);
 var invariant = __webpack_require__(1);
-var setInnerHTML = __webpack_require__(32);
+var setInnerHTML = __webpack_require__(33);
 var shouldUpdateReactComponent = __webpack_require__(52);
 var warning = __webpack_require__(2);
 
@@ -9807,8 +9807,8 @@ module.exports = isTextInputElement;
 
 
 var ExecutionEnvironment = __webpack_require__(6);
-var escapeTextContentForBrowser = __webpack_require__(31);
-var setInnerHTML = __webpack_require__(32);
+var escapeTextContentForBrowser = __webpack_require__(32);
+var setInnerHTML = __webpack_require__(33);
 
 /**
  * Set the textContent property of a node, ensuring that whitespace is preserved
@@ -10099,7 +10099,7 @@ var ReactElement = __webpack_require__(16);
 
 var checkReactTypeSpec = __webpack_require__(202);
 
-var canDefineProperty = __webpack_require__(34);
+var canDefineProperty = __webpack_require__(35);
 var getIteratorFn = __webpack_require__(91);
 var warning = __webpack_require__(2);
 
@@ -10682,7 +10682,7 @@ var YTickLabel = function (_React$Component4) {
     value: function render() {
       var printVal = this.props.value;
       if (this.props.value >= 0) {
-        printVal = _humanizePlus2.default.compactInteger(Math.round(this.props.value), 2);
+        printVal = _humanizePlus2.default.compactInteger(this.props.value, 2);
       } else {
         printVal = this.props.value.toFixed(4);
       }
@@ -10780,6 +10780,7 @@ var YAxis = function (_React$Component6) {
             var valueRatio = Math.log10(this.props.maxY) / (this.props.ySteps - 1);
             var pow10 = void 0;
             if (this.props.minY < 1) {
+              valueRatio = (Math.log10(this.props.maxY) - Math.log10(this.props.minY)) / (this.props.ySteps - 1);
               pow10 = Math.log10(this.props.minY) + i * valueRatio;
             } else {
               pow10 = Math.log(1) + i * valueRatio;
@@ -10856,7 +10857,6 @@ var Axis = function (_React$Component7) {
         xLabel: this.props.xLabel, xTicks: this.props.xTicks, xSteps: this.props.xSteps,
         maxX: this.props.maxX, minX: this.props.minX, color: this.props.color,
         xAxisLine: this.props.xAxisLine }));
-
       axis.push(_react2.default.createElement(YAxis, { key: "yaxis", x: this.props.x, y: this.props.y,
         width: this.props.width, height: this.props.height,
         yLabel: this.props.yLabel, ySteps: this.props.ySteps, yTicks: this.props.yTicks,
@@ -11008,6 +11008,10 @@ var _CircleSizing2 = _interopRequireDefault(_CircleSizing);
 
 var _reactMotion = __webpack_require__(190);
 
+var _propTypes = __webpack_require__(27);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -11120,8 +11124,12 @@ var ScatterPlot = function (_React$Component2) {
       var maxX = Math.max.apply(Math, xvals);
       var minX = Math.min.apply(Math, xvals);
       var maxY = Math.max.apply(Math, yvals);
-      var minY = Math.min.apply(Math, yvals);
-
+      var minY = void 0;
+      if (this.props.scale == "log") {
+        minY = Math.min.apply(null, yvals.filter(Boolean));
+      } else {
+        minY = Math.min.apply(Math, yvals);
+      }
       var buffer = 80;
 
       var chartWidth = this.props.width - 2 * buffer;
@@ -11188,9 +11196,14 @@ var ScatterPlot = function (_React$Component2) {
             var chartMaxY = Math.pow(10, pow10);
 
             heightRatio = log / Math.log10(chartMaxY);
+
+            if (minY < 1) {
+              var logDiff = Math.log10(parseFloat(member[this.props.yKey])) - Math.log10(minY);
+              heightRatio = logDiff / (Math.log10(maxY) - Math.log10(minY));
+            }
           } else if (this.props.scale == "log" && this.props.yStart == "break") {
-            var logDiff = Math.log10(parseFloat(member[this.props.yKey])) - Math.log10(minY);
-            heightRatio = logDiff / (Math.log10(maxY) - Math.log10(minY));
+            var _logDiff = Math.log10(parseFloat(member[this.props.yKey])) - Math.log10(minY);
+            heightRatio = _logDiff / (Math.log10(maxY) - Math.log10(minY));
           } else if (this.props.scale == "default" && this.props.yStart == "break") {
             heightRatio = (parseFloat(member[this.props.yKey]) - minY) / (maxY - minY);
           } else {
@@ -11207,7 +11220,13 @@ var ScatterPlot = function (_React$Component2) {
             displayColor = false;
           }
 
+          if (member[this.props.yKey] == 0 && this.props.scale == "log") {
+            modY = 0;
+            radius = 0;
+          }
+
           var p = { x: modX, y: modY, r: radius, f: displayColor };
+
           if (key != -1) {
             sets[key].push(p);
           } else {
@@ -11313,6 +11332,27 @@ ScatterPlot.defaultProps = {
   legendColor: "#000000",
   color: defPalette,
   axisColor: "#000000"
+};
+
+ScatterPlot.propTypes = {
+  width: _propTypes2.default.number,
+  height: _propTypes2.default.number,
+  circleKey: _propTypes2.default.string,
+  maxRadius: _propTypes2.default.number,
+  minRadius: _propTypes2.default.number,
+  scale: _propTypes2.default.string,
+  xSteps: _propTypes2.default.number,
+  xTicks: _propTypes2.default.string,
+  xAxisLine: _propTypes2.default.string,
+  xLabel: _propTypes2.default.string,
+  yTicks: _propTypes2.default.string,
+  yAxisLine: _propTypes2.default.string,
+  yLabel: _propTypes2.default.string,
+  yStart: _propTypes2.default.string,
+  grid: _propTypes2.default.string,
+  legend: _propTypes2.default.string,
+  legendColor: _propTypes2.default.string,
+  axisColor: _propTypes2.default.string
 };
 
 exports.default = ScatterPlot;
@@ -14626,7 +14666,7 @@ module.exports = DefaultEventPluginOrder;
 
 var EventPropagators = __webpack_require__(23);
 var ReactDOMComponentTree = __webpack_require__(5);
-var SyntheticMouseEvent = __webpack_require__(29);
+var SyntheticMouseEvent = __webpack_require__(30);
 
 var eventTypes = {
   mouseEnter: {
@@ -15283,7 +15323,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 var emptyObject = __webpack_require__(18);
 var invariant = __webpack_require__(1);
-var shallowEqual = __webpack_require__(36);
+var shallowEqual = __webpack_require__(37);
 var shouldUpdateReactComponent = __webpack_require__(52);
 var warning = __webpack_require__(2);
 
@@ -16302,8 +16342,8 @@ var DOMNamespaces = __webpack_require__(40);
 var DOMProperty = __webpack_require__(14);
 var DOMPropertyOperations = __webpack_require__(68);
 var EventPluginHub = __webpack_require__(22);
-var EventPluginRegistry = __webpack_require__(27);
-var ReactBrowserEventEmitter = __webpack_require__(28);
+var EventPluginRegistry = __webpack_require__(28);
+var ReactBrowserEventEmitter = __webpack_require__(29);
 var ReactDOMComponentFlags = __webpack_require__(69);
 var ReactDOMComponentTree = __webpack_require__(5);
 var ReactDOMInput = __webpack_require__(135);
@@ -16315,10 +16355,10 @@ var ReactMultiChild = __webpack_require__(154);
 var ReactServerRenderingTransaction = __webpack_require__(159);
 
 var emptyFunction = __webpack_require__(8);
-var escapeTextContentForBrowser = __webpack_require__(31);
+var escapeTextContentForBrowser = __webpack_require__(32);
 var invariant = __webpack_require__(1);
 var isEventSupported = __webpack_require__(51);
-var shallowEqual = __webpack_require__(36);
+var shallowEqual = __webpack_require__(37);
 var validateDOMNesting = __webpack_require__(53);
 var warning = __webpack_require__(2);
 
@@ -18256,7 +18296,7 @@ var DOMChildrenOperations = __webpack_require__(39);
 var DOMLazyTree = __webpack_require__(19);
 var ReactDOMComponentTree = __webpack_require__(5);
 
-var escapeTextContentForBrowser = __webpack_require__(31);
+var escapeTextContentForBrowser = __webpack_require__(32);
 var invariant = __webpack_require__(1);
 var validateDOMNesting = __webpack_require__(53);
 
@@ -18728,7 +18768,7 @@ module.exports = {
 
 
 var DOMProperty = __webpack_require__(14);
-var EventPluginRegistry = __webpack_require__(27);
+var EventPluginRegistry = __webpack_require__(28);
 var ReactComponentTreeHook = __webpack_require__(7);
 
 var warning = __webpack_require__(2);
@@ -19213,7 +19253,7 @@ module.exports = ReactDebugTool;
 var _assign = __webpack_require__(4);
 
 var ReactUpdates = __webpack_require__(10);
-var Transaction = __webpack_require__(30);
+var Transaction = __webpack_require__(31);
 
 var emptyFunction = __webpack_require__(8);
 
@@ -19641,7 +19681,7 @@ var EventPluginHub = __webpack_require__(22);
 var EventPluginUtils = __webpack_require__(41);
 var ReactComponentEnvironment = __webpack_require__(44);
 var ReactEmptyComponent = __webpack_require__(71);
-var ReactBrowserEventEmitter = __webpack_require__(28);
+var ReactBrowserEventEmitter = __webpack_require__(29);
 var ReactHostComponent = __webpack_require__(73);
 var ReactUpdates = __webpack_require__(10);
 
@@ -20364,10 +20404,10 @@ var _assign = __webpack_require__(4);
 
 var CallbackQueue = __webpack_require__(67);
 var PooledClass = __webpack_require__(15);
-var ReactBrowserEventEmitter = __webpack_require__(28);
+var ReactBrowserEventEmitter = __webpack_require__(29);
 var ReactInputSelection = __webpack_require__(74);
 var ReactInstrumentation = __webpack_require__(9);
-var Transaction = __webpack_require__(30);
+var Transaction = __webpack_require__(31);
 var ReactUpdateQueue = __webpack_require__(46);
 
 /**
@@ -20641,7 +20681,7 @@ module.exports = ReactRef;
 var _assign = __webpack_require__(4);
 
 var PooledClass = __webpack_require__(15);
-var Transaction = __webpack_require__(30);
+var Transaction = __webpack_require__(31);
 var ReactInstrumentation = __webpack_require__(9);
 var ReactServerUpdateQueue = __webpack_require__(160);
 
@@ -21213,7 +21253,7 @@ var SyntheticEvent = __webpack_require__(13);
 
 var getActiveElement = __webpack_require__(62);
 var isTextInputElement = __webpack_require__(84);
-var shallowEqual = __webpack_require__(36);
+var shallowEqual = __webpack_require__(37);
 
 var skipSelectionChangeEvent = ExecutionEnvironment.canUseDOM && 'documentMode' in document && document.documentMode <= 11;
 
@@ -21412,7 +21452,7 @@ var SyntheticClipboardEvent = __webpack_require__(166);
 var SyntheticEvent = __webpack_require__(13);
 var SyntheticFocusEvent = __webpack_require__(169);
 var SyntheticKeyboardEvent = __webpack_require__(171);
-var SyntheticMouseEvent = __webpack_require__(29);
+var SyntheticMouseEvent = __webpack_require__(30);
 var SyntheticDragEvent = __webpack_require__(168);
 var SyntheticTouchEvent = __webpack_require__(172);
 var SyntheticTransitionEvent = __webpack_require__(173);
@@ -21763,7 +21803,7 @@ module.exports = SyntheticCompositionEvent;
 
 
 
-var SyntheticMouseEvent = __webpack_require__(29);
+var SyntheticMouseEvent = __webpack_require__(30);
 
 /**
  * @interface DragEvent
@@ -22070,7 +22110,7 @@ module.exports = SyntheticTransitionEvent;
 
 
 
-var SyntheticMouseEvent = __webpack_require__(29);
+var SyntheticMouseEvent = __webpack_require__(30);
 
 /**
  * @interface WheelEvent
@@ -22842,7 +22882,7 @@ module.exports = getVendorPrefixedEventName;
 
 
 
-var escapeTextContentForBrowser = __webpack_require__(31);
+var escapeTextContentForBrowser = __webpack_require__(32);
 
 /**
  * Escapes attribute value to prevent scripting attacks.
@@ -22894,7 +22934,7 @@ var _mapToZero = __webpack_require__(54);
 
 var _mapToZero2 = _interopRequireDefault(_mapToZero);
 
-var _stripStyle = __webpack_require__(33);
+var _stripStyle = __webpack_require__(34);
 
 var _stripStyle2 = _interopRequireDefault(_stripStyle);
 
@@ -22918,11 +22958,11 @@ var _react = __webpack_require__(12);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _propTypes = __webpack_require__(37);
+var _propTypes = __webpack_require__(27);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _createReactClass = __webpack_require__(35);
+var _createReactClass = __webpack_require__(36);
 
 var _createReactClass2 = _interopRequireDefault(_createReactClass);
 
@@ -23147,7 +23187,7 @@ var _mapToZero = __webpack_require__(54);
 
 var _mapToZero2 = _interopRequireDefault(_mapToZero);
 
-var _stripStyle = __webpack_require__(33);
+var _stripStyle = __webpack_require__(34);
 
 var _stripStyle2 = _interopRequireDefault(_stripStyle);
 
@@ -23171,11 +23211,11 @@ var _react = __webpack_require__(12);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _propTypes = __webpack_require__(37);
+var _propTypes = __webpack_require__(27);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _createReactClass = __webpack_require__(35);
+var _createReactClass = __webpack_require__(36);
 
 var _createReactClass2 = _interopRequireDefault(_createReactClass);
 
@@ -23421,7 +23461,7 @@ var _mapToZero = __webpack_require__(54);
 
 var _mapToZero2 = _interopRequireDefault(_mapToZero);
 
-var _stripStyle = __webpack_require__(33);
+var _stripStyle = __webpack_require__(34);
 
 var _stripStyle2 = _interopRequireDefault(_stripStyle);
 
@@ -23449,11 +23489,11 @@ var _react = __webpack_require__(12);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _propTypes = __webpack_require__(37);
+var _propTypes = __webpack_require__(27);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _createReactClass = __webpack_require__(35);
+var _createReactClass = __webpack_require__(36);
 
 var _createReactClass2 = _interopRequireDefault(_createReactClass);
 
@@ -24057,7 +24097,7 @@ var _presets = __webpack_require__(87);
 
 exports.presets = _interopRequire(_presets);
 
-var _stripStyle = __webpack_require__(33);
+var _stripStyle = __webpack_require__(34);
 
 exports.stripStyle = _interopRequire(_stripStyle);
 
@@ -25867,12 +25907,13 @@ module.exports = traverseAllChildren;
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 class CircleSizing {
-  constructor(data, circleKey, maxRadius, minRadius) {
+  constructor(data, circleKey, maxRadius, minRadius, yKey) {
     this.data = data
     this.circleKey = circleKey
     this.maxRadius = maxRadius
     this.minRadius = minRadius
 
+    this.yKey = yKey
     this.smallestWeight = Infinity
     this.largestWeight = 0
 
@@ -26031,7 +26072,7 @@ var KeyValueRow = function (_React$Component) {
       this.props.updateData({
         continent: this.props.continent,
         population: this.props.population,
-        gdp: e.target.value
+        gdp: e.target.value || "0"
       });
     }
   }, {
@@ -26060,7 +26101,7 @@ var KeyValueRow = function (_React$Component) {
         _react2.default.createElement(
           "td",
           { style: style.cell },
-          _react2.default.createElement("input", { type: "text", value: parseFloat(this.props.gdp) || "",
+          _react2.default.createElement("input", { type: "text", value: parseFloat(this.props.gdp),
             onChange: this.changeHandler.bind(this) })
         )
       );
