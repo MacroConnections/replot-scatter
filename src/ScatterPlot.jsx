@@ -6,6 +6,7 @@ import Color from "./Color.js"
 import ColorPalette from "./ColorPalette.js"
 import CircleSizing from "./CircleSizing.js"
 import {spring, Motion} from "react-motion"
+import PropTypes from "prop-types"
 
 const defPalette = ["#4cab92", "#ca0004", "#003953", "#eccc00", "#9dbd5f", "#0097bf", "#005c7a", "#fc6000"]
 
@@ -65,8 +66,12 @@ class ScatterPlot extends React.Component {
     let maxX = Math.max.apply(Math, xvals)
     let minX = Math.min.apply(Math, xvals)
     let maxY = Math.max.apply(Math, yvals)
-    let minY = Math.min.apply(Math, yvals)
-
+    let minY
+    if (this.props.scale == "log") {
+      minY = Math.min.apply(null, yvals.filter(Boolean))
+    } else {
+      minY = Math.min.apply(Math, yvals)
+    }
     let buffer = 80
 
     let chartWidth = this.props.width - 2*buffer
@@ -128,6 +133,12 @@ class ScatterPlot extends React.Component {
         let chartMaxY = Math.pow(10, pow10)
 
         heightRatio = log / (Math.log10(chartMaxY))
+
+        if (minY < 1) {
+          let logDiff = (Math.log10(parseFloat(member[this.props.yKey]))-Math.log10(minY))
+          heightRatio = logDiff / (Math.log10(maxY)-Math.log10(minY))
+        }
+
       } else if (this.props.scale == "log" && this.props.yStart == "break"){
         let logDiff = (Math.log10(parseFloat(member[this.props.yKey]))-Math.log10(minY))
         heightRatio = logDiff / (Math.log10(maxY)-Math.log10(minY))
@@ -147,13 +158,20 @@ class ScatterPlot extends React.Component {
         displayColor = false
       }
 
+      if (member[this.props.yKey] == 0 && this.props.scale == "log") {
+        modY = 0
+        radius = 0
+      }
+
       let p = {x: modX, y: modY, r: radius, f: displayColor}
+
       if (key != -1) {
         sets[key].push(p)
       } else {
         setTitles.push(member[this.props.titleKey])
         sets.push([p])
       }
+
 
       sumX += modX
       sumY += modY
@@ -219,6 +237,27 @@ ScatterPlot.defaultProps = {
   legendColor: "#000000",
   color: defPalette,
   axisColor: "#000000"
+}
+
+ScatterPlot.propTypes = {
+  width: PropTypes.number,
+  height: PropTypes.number,
+  circleKey: PropTypes.string,
+  maxRadius: PropTypes.number,
+  minRadius: PropTypes.number,
+  scale: PropTypes.string,
+  xSteps: PropTypes.number,
+  xTicks: PropTypes.string,
+  xAxisLine: PropTypes.string,
+  xLabel: PropTypes.string,
+  yTicks: PropTypes.string,
+  yAxisLine: PropTypes.string,
+  yLabel: PropTypes.string,
+  yStart: PropTypes.string,
+  grid: PropTypes.string,
+  legend: PropTypes.string,
+  legendColor: PropTypes.string,
+  axisColor: PropTypes.string,
 }
 
 export default ScatterPlot

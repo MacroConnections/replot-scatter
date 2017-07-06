@@ -94,7 +94,7 @@ class YTickLabel extends React.Component {
   render() {
     let printVal = this.props.value
     if (this.props.value >= 0) {
-      printVal = Humanize.compactInteger(Math.round(this.props.value),2)
+      printVal = Humanize.compactInteger(this.props.value,2)
     } else {
       printVal = this.props.value.toFixed(4)
     }
@@ -174,6 +174,7 @@ class YAxis extends React.Component {
           let valueRatio = (Math.log10(this.props.maxY)) / (this.props.ySteps - 1)
           let pow10
           if (this.props.minY < 1) {
+            valueRatio = (Math.log10(this.props.maxY) - Math.log10(this.props.minY)) / (this.props.ySteps - 1)
             pow10 = Math.log10(this.props.minY) + (i) * valueRatio
           } else {
             pow10 = Math.log(1) + i * valueRatio
@@ -248,7 +249,6 @@ class Axis extends React.Component {
         maxX={this.props.maxX} minX={this.props.minX} color={this.props.color}
         xAxisLine={this.props.xAxisLine} />
     )
-
     axis.push(
       <YAxis key={"yaxis"} x={this.props.x} y={this.props.y}
         width={this.props.width} height={this.props.height}
