@@ -1,6 +1,7 @@
 import React from "react"
 import Humanize from "humanize-plus"
 import Line from "./Line.jsx"
+import PropTypes from "prop-types"
 
 class XTickLabel extends React.Component {
 
@@ -288,6 +289,30 @@ Axis.defaultProps = {
   minX: 0,
   maxY: 100,
   minY: 0
+}
+
+Axis.propTypes = {
+  x: PropTypes.number,
+  y: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  color: PropTypes.string,
+  scale: PropTypes.string,
+  grid: PropTypes.string,
+  gridColor: PropTypes.string,
+  xLabel: PropTypes.string,
+  yLabel: PropTypes.string,
+  xSteps: PropTypes.number,
+  xTicks: PropTypes.string,
+  xAxisLine: PropTypes.string,
+  ySteps: PropTypes.number,
+  yTicks: PropTypes.string,
+  yAxisLine: PropTypes.string,
+  yStart: PropTypes.string,
+  maxX: PropTypes.number,
+  minX: PropTypes.number,
+  maxY: PropTypes.number,
+  minY: PropTypes.number
 }
 
 export default Axis

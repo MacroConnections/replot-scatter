@@ -250,6 +250,10 @@ ScatterPlot.propTypes = {
   xTicks: PropTypes.string,
   xAxisLine: PropTypes.string,
   xLabel: PropTypes.string,
+  ySteps: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
   yTicks: PropTypes.string,
   yAxisLine: PropTypes.string,
   yLabel: PropTypes.string,
@@ -257,6 +261,10 @@ ScatterPlot.propTypes = {
   grid: PropTypes.string,
   legend: PropTypes.string,
   legendColor: PropTypes.string,
+  color: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.array
+  ]),
   axisColor: PropTypes.string,
 }
 
