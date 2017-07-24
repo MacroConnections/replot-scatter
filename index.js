@@ -1147,8 +1147,8 @@ var ScatterPlot = function (_React$Component2) {
       }
 
       chart.push(_react2.default.createElement(_Axis2.default, { key: "axis", x: chartX, y: chartY, width: chartWidth, height: chartHeight,
-        color: this.props.axisColor, scale: this.props.scale, grid: this.props.grid,
-        xLabel: xl, yLabel: yl,
+        color: this.props.axisColor, scale: this.props.scale, xLabel: xl, yLabel: yl,
+        grid: this.props.grid, gridColor: this.props.gridColor,
         xSteps: this.props.xSteps, xTicks: this.props.xTicks, xAxisLine: this.props.xAxisLine,
         yTicks: this.props.yTicks, ySteps: yStep, yAxisLine: this.props.yAxisLine,
         yStart: this.props.yStart,
@@ -1319,6 +1319,7 @@ ScatterPlot.defaultProps = {
   yLabel: "off",
   yStart: "origin",
   grid: "default",
+  gridColor: "#DDDDDD",
   legend: "default",
   legendColor: "#000000",
   color: defPalette,
@@ -1342,6 +1343,7 @@ ScatterPlot.propTypes = {
   yLabel: _propTypes2.default.string,
   yStart: _propTypes2.default.string,
   grid: _propTypes2.default.string,
+  gridColor: _propTypes2.default.string,
   legend: _propTypes2.default.string,
   legendColor: _propTypes2.default.string,
   color: _propTypes2.default.oneOfType([_propTypes2.default.func, _propTypes2.default.array]),
