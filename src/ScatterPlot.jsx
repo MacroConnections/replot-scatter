@@ -99,8 +99,8 @@ class ScatterPlot extends React.Component {
 
     chart.push(
       <Axis key={"axis"} x={chartX} y={chartY} width={chartWidth} height={chartHeight}
-        color={this.props.axisColor} scale={this.props.scale} grid={this.props.grid}
-        xLabel={xl} yLabel={yl} gridColor={this.props.gridColor}
+        color={this.props.axisColor} scale={this.props.scale} xLabel={xl} yLabel={yl}
+        grid={this.props.grid} gridColor={this.props.gridColor}
         xSteps={this.props.xSteps} xTicks={this.props.xTicks} xAxisLine={this.props.xAxisLine}
         yTicks={this.props.yTicks} ySteps={yStep} yAxisLine={this.props.yAxisLine}
         yStart={this.props.yStart}
