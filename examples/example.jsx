@@ -225,7 +225,8 @@ class ExampleApp extends React.Component {
         <div style={{width:"70%", float:"right", marginTop:"50px", padding:"50px", backgroundColor:"#FFFFFF"}}>
           <ScatterPlot data={this.state.data}
             titleKey="continent" xKey="population" yKey="gdp" minRadius={3}
-            scale={this.state.scale} grid="default" legend="default" color={this.state.color} />
+            scale={this.state.scale} grid="default" legend="default" color={this.state.color}
+            showTrendline="true"/>
         </div>
       </div>
     )

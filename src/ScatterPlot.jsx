@@ -186,6 +186,38 @@ class ScatterPlot extends React.Component {
     let cVal = ((sumXSquare * sumY) - (sumX * sumXY)) / ((numData * sumXSquare) - (sumX * sumX))
     let eq = {m:mVal, c:cVal}
 
+    if (this.props.showTrendline == "true") {
+      chart.push(
+        <Motion
+          defaultStyle={{
+            x1: chartX,
+            y1: eq.m*(chartX)+eq.c,
+            x2: chartX ,
+            y2: eq.m*(chartX)+eq.c,
+          }}
+          style={{
+            x1: spring(chartX, {stiffness: 125, damping: 25}),
+            y1: spring(eq.m*(chartX)+eq.c, {stiffness: 125, damping: 25}),
+            x2: spring(chartX+chartWidth, {stiffness: 125, damping: 25}),
+            y2: spring(eq.m*(chartX+chartWidth)+eq.c, {stiffness: 125, damping: 25}),
+          }}
+          >
+          {
+            style =>
+            <Line key={"trendline"}
+              x1={style.x1}
+              y1={style.y1}
+              x2={style.x2}
+              y2={style.y2}
+              stroke={this.props.trendlineColor}
+              strokeWidth={this.props.trendlineWidth}
+              opacity={this.props.trendlineOpacity}
+              />
+          }
+        </Motion>
+      )
+    }
+
     let numsets = setTitles.length
     for (var i=0; i < numsets; i++) {
       let color = this.props.color[i%this.props.color.length]
@@ -237,7 +269,11 @@ ScatterPlot.defaultProps = {
   legend: "default",
   legendColor: "#000000",
   color: defPalette,
-  axisColor: "#000000"
+  axisColor: "#000000",
+  showTrendline: "false",
+  trendlineColor: "#C4C4C4",
+  trendlineWidth: 2,
+  trendlineOpacity: 1
 }
 
 ScatterPlot.propTypes = {
@@ -268,6 +304,10 @@ ScatterPlot.propTypes = {
     PropTypes.array
   ]),
   axisColor: PropTypes.string,
+  showTrendline: PropTypes.string,
+  trendlineColor: PropTypes.string,
+  trendlineWidth: PropTypes.number,
+  trendlineOpacity: PropTypes.number
 }
 
 export default ScatterPlot
