@@ -58,6 +58,15 @@ Note: legend is automatically generated
 	- `minRadius` defaults to `2.5` (if `circleKey` is not given, points default to `minRadius`)
 	- `maxRadius` defaults to `10`
 
+### Data
+- `showTrendline` defaults to `"false"`
+	- set to `"true"` to draw a trendline on the plot
+	- `"trendlineColor"` defaults to `"#C4C4C4"`
+		- specify the trendline's color
+  - `"trendlineWidth"` defaults to `2`
+		- specify the trendline's width
+  - `"trendlineOpacity"` defaults to `1`
+		- specify the trendline's opacity
 
 ## Future Implementation
 
