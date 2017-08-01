@@ -203,7 +203,7 @@ class ExampleApp extends React.Component {
           <ScatterPlot data={this.state.data}
             titleKey="gender" xKey="height" yKey="weight" circleKey="shoeSize"
             scale={this.state.scale} grid="default" legend="default" color={this.state.color}
-            xLabel="on" yLabel="on" />
+            xLabel="on" yLabel="on" showTrendline="true"/>
         </div>
       </div>
     )
