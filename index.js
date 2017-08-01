@@ -1098,6 +1098,8 @@ var ScatterPlot = function (_React$Component2) {
   _createClass(ScatterPlot, [{
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       var data = JSON.parse(JSON.stringify(this.props.data));
       var xKey = this.props.xKey;
       var yKey = this.props.yKey;
@@ -1253,6 +1255,37 @@ var ScatterPlot = function (_React$Component2) {
       var cVal = (sumXSquare * sumY - sumX * sumXY) / (numData * sumXSquare - sumX * sumX);
       var eq = { m: mVal, c: cVal };
 
+      if (this.props.showTrendline == "true") {
+        chart.push(_react2.default.createElement(
+          _reactMotion.Motion,
+          {
+            defaultStyle: {
+              x1: chartX,
+              y1: eq.m * chartX + eq.c,
+              x2: chartX,
+              y2: eq.m * chartX + eq.c
+            },
+            style: {
+              x1: (0, _reactMotion.spring)(chartX, { stiffness: 125, damping: 25 }),
+              y1: (0, _reactMotion.spring)(eq.m * chartX + eq.c, { stiffness: 125, damping: 25 }),
+              x2: (0, _reactMotion.spring)(chartX + chartWidth, { stiffness: 125, damping: 25 }),
+              y2: (0, _reactMotion.spring)(eq.m * (chartX + chartWidth) + eq.c, { stiffness: 125, damping: 25 })
+            }
+          },
+          function (style) {
+            return _react2.default.createElement(_Line2.default, { key: "trendline",
+              x1: style.x1,
+              y1: style.y1,
+              x2: style.x2,
+              y2: style.y2,
+              stroke: _this3.props.trendlineColor,
+              strokeWidth: _this3.props.trendlineWidth,
+              opacity: _this3.props.trendlineOpacity
+            });
+          }
+        ));
+      }
+
       var numsets = setTitles.length;
       for (var i = 0; i < numsets; i++) {
         var color = this.props.color[i % this.props.color.length];
@@ -1323,7 +1356,11 @@ ScatterPlot.defaultProps = {
   legend: "default",
   legendColor: "#000000",
   color: defPalette,
-  axisColor: "#000000"
+  axisColor: "#000000",
+  showTrendline: "false",
+  trendlineColor: "#C4C4C4",
+  trendlineWidth: 2,
+  trendlineOpacity: 1
 };
 
 ScatterPlot.propTypes = {
@@ -1347,7 +1384,11 @@ ScatterPlot.propTypes = {
   legend: _propTypes2.default.string,
   legendColor: _propTypes2.default.string,
   color: _propTypes2.default.oneOfType([_propTypes2.default.func, _propTypes2.default.array]),
-  axisColor: _propTypes2.default.string
+  axisColor: _propTypes2.default.string,
+  showTrendline: _propTypes2.default.string,
+  trendlineColor: _propTypes2.default.string,
+  trendlineWidth: _propTypes2.default.number,
+  trendlineOpacity: _propTypes2.default.number
 };
 
 exports.default = ScatterPlot;
