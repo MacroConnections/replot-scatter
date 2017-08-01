@@ -61,11 +61,11 @@ Note: legend is automatically generated
 ### Data
 - `showTrendline` defaults to `"false"`
 	- set to `"true"` to draw a trendline on the plot
-	- `"trendlineColor"` defaults to `"#C4C4C4"`
+	- `trendlineColor` defaults to `"#C4C4C4"`
 		- specify the trendline's color
-  - `"trendlineWidth"` defaults to `2`
+  - `trendlineWidth` defaults to `2`
 		- specify the trendline's width
-  - `"trendlineOpacity"` defaults to `1`
+  - `trendlineOpacity` defaults to `1`
 		- specify the trendline's opacity
 
 ## Future Implementation
@@ -95,7 +95,7 @@ Note: legend is automatically generated
 - `transpose`: defaults to `"no"`
 	- `"no"`: first value of tuple on x-axis, second value of tuple on y-axis
 	- `"yes"`: first value of tuple on y-axis, second value of tuple on x-axis
-- `yStart`: defaults to `break`
+- `yStart`: defaults to `"break"`
 	- `"origin"`: y-axis starts at origin (for linear scale)
 	- `"break"`: y-axis starts at the lowest y-value in dataset (break in axis)
 
