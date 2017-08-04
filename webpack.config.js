@@ -5,7 +5,7 @@ module.exports = {
   entry: "./src/index.jsx",
 
   output: {
-    library: "LineChart",
+    library: "ScatterPlot",
     libraryTarget: "umd"
   },
 
