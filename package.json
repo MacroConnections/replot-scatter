@@ -43,7 +43,8 @@
     "webpack": "^2.2.1"
   },
   "dependencies": {
+    "humanize-plus": "^1.8.2",
     "react-motion": "^0.4.7",
-    "humanize-plus": "^1.8.2"
+    "replot-core": "git+ssh://git@github.com/MacroConnections/replot-core.git"
   }
 }
