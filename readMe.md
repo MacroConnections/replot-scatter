@@ -1,116 +1,276 @@
-# Scatter plots for react
+# Scatter Plots for react
 Intelligent and customizable scatter plot components for react.
 
+## Installation
+Only works with React projects. React must be installed separately.
+```bash
+npm install replot-line
+```
+
+Then with a module bundler like webpack/browserify that supports CommonJS/ES2015
+modules, use as you would anything else.
+
+```javascript
+import ScatterPlot from 'replot-scatter'
+```
+
 ## API
-Supply data and specify keys for the titles of each dataset in JSON format.
+replot-scatter is designed to easily create ScatterPlots.
+The only *required* input is proper JSON formatted data.
+
+### Basic Usage
+In the simplest case, just supply data (as a Javascript array) and specify the
+keys associated with the values -:
 
 ```javascript
 render() {
-	let populations = {
-		{location: "Global", year: 2010, population: 6916183482},
-		{location: "Global", year: 2011, population: 6997998760},
-		{location: "Global", year: 2012, population: 7080072417},
-		{location: "Global", year: 2013, population: 7162119434},
-		{location: "Global", year: 2014, population: 7243784121},
-		{location: "Global", year: 2015, population: 7324782225},
-		{location: "Global", year: 2016, population: 7404976783},
-		{location: "US", year: 2010, population: 310559000},
-		{location: "US", year: 2011, population: 312917100},
-		{location: "US", year: 2012, population: 315219700},
-		{location: "US", year: 2013, population: 317474000},
-		{location: "US", year: 2014, population: 319849000},
-		{location: "US", year: 2015, population: 322060100},
-		{location: "US", year: 2016, population: 324304400},
-		{location: "India", year: 2010, population: 1186000000},
-		{location: "India", year: 2011, population: 1210570000},
-		{location: "India", year: 2012, population: 1213370000},
-		{location: "India", year: 2013, population: 1223000000},
-		{location: "India", year: 2014, population: 1267000000},
-		{location: "India", year: 2015, population: 1283000000},
-		{location: "India", year: 2016, population: 1299000000},
-	}
+  let data = [
+    {height: 70, weight: 155},
+    {height: 72, weight: 144},
+    {height: 73, weight: 158},
+    {height: 72, weight: 160},
+    {height: 77, weight: 186},
+    {height: 68, weight: 153},
+    {height: 69, weight: 160},
+    {height: 67, weight: 166},
+    {height: 60, weight: 90},
+    {height: 63.5, weight: 100},
+    {height: 62, weight: 102},
+    {height: 65, weight: 112},
+    {height: 59, weight: 90},
+    {height: 58.5, weight: 95},
+    {height: 61.5, weight: 115},
+    {height: 69, weight: 125},
+    {height: 70, weight: 135},
+  ],
 
 	return(
-		<LineChart data={populations}
-		titleKey="location"
-		xKey="year"
-		yKey="population" />
+		<ScatterPlot data={data}
+		xKey="height"
+		yKey="weight" />
 	)
 }
 ```
 
 - `data` is the only required prop
-- `titleKey` defaults to `"title"`
 - `xKey` defaults to `"x"`
 - `yKey` defaults to `"y"`
 
-### Color Customization
-- `color`: defaults to preset palette
-	- specify an array of color hex codes, e.g. `["#FF0000", "#00FF00", "#0000FF"]`
-	- specify a function
+### Advanced Usage - Groups and Weights
+Replot ScatterPlots support displaying multiple distibutions of points. If a
+`groupKey` prop is included, the points on the ScatterPlot will be colored
+according to their groups.
 
-Note: legend is automatically generated
+Replot ScatterPlots also support variable size points according to a weight. If
+a `weightKey` prop is included, the points will be sized according to their weight.
+The user can also specify `minRadius` and `maxRadius` props to alter the range in
+sizes of the circles. If no `weightKey` is specified, all circles will assume a
+size of `minRadius`.
 
-### Point Customization
-- `circleKey` defaults to `"default"`
- 	- specify the property to determine the weights of the data points with (values must be numbers)
-	- radius sizes will increase/decrease relative to the point's weight
-	- `minRadius` defaults to `2.5` (if `circleKey` is not given, points default to `minRadius`)
-	- `maxRadius` defaults to `10`
+```javascript
+render() {
+	let data = [
+    {gender: "male", height: 70, weight: 155, shoeSize: 10},
+    {gender: "male", height: 72, weight: 144, shoeSize: 12},
+    {gender: "male", height: 73, weight: 158, shoeSize: 11.5},
+    {gender: "male", height: 72, weight: 160, shoeSize: 11},
+    {gender: "male", height: 77, weight: 186, shoeSize: 13},
+    {gender: "male", height: 68, weight: 153, shoeSize: 10},
+    {gender: "male", height: 69, weight: 160, shoeSize: 9},
+    {gender: "male", height: 67, weight: 166, shoeSize: 9.5}
+    {gender: "female", height: 60, weight: 90, shoeSize: 6},
+    {gender: "female", height: 63.5, weight: 100, shoeSize: 6.5},
+    {gender: "female", height: 62, weight: 102, shoeSize: 6.5},
+    {gender: "female", height: 65, weight: 112, shoeSize: 7},
+    {gender: "female", height: 59, weight: 90, shoeSize: 6},
+    {gender: "female", height: 58.5, weight: 95, shoeSize: 5.5},
+    {gender: "female", height: 61.5, weight: 115, shoeSize: 6},
+    {gender: "female", height: 69, weight: 125, shoeSize: 8},
+    {gender: "female", height: 70, weight: 135, shoeSize: 8.5}
+  ]
 
-### Data
-- `showTrendline` defaults to `"false"`
-	- set to `"true"` to draw a trendline on the plot
-	- `trendlineColor` defaults to `"#C4C4C4"`
-		- specify the trendline's color
-  - `trendlineWidth` defaults to `2`
-		- specify the trendline's width
-  - `trendlineOpacity` defaults to `1`
-		- specify the trendline's opacity
+	return(
+		<ScatterPlot data={data}
+		xKey="height"
+		yKey="weight"
+		groupKey="gender"
+		weightKey="shoeSize"/>
+	)
+}
+```
 
-## Future Implementation
+### Dimensions
+Dimensions may be specified by passing in `width` and `height` props. The
+unit is pixels, and the Scatter Plot defaults to 800 by 600 pixels.
 
-- `titleLabel` (string) defaults to `"title"`
-- `xLabel` (string) defaults to `"x-axis"`
-- `yLabel` (string) defaults to `"y-axis"`
+The Scatter Plot will not function with a width that is less than 60 pixels, or with
+a height that is less than 100 pixels.
+
+Width dimensions may also be specified with a string, as a percentage. The width
+will then be calculated as a proportion of the parent container
+
+```javascript
+render() {
+
+	return(
+		<ScatterPlot data={data} width="50%" />
+	)
+}
+```
+
+### Colors
+Colors may be specified through 2 different mechanisms, both through a `color` prop.
+If none of the mechanisms are specified, ScatterPlot defaults to a built in
+color palette.
+
+#### User-provided Color Palette
+The user can specify their own desired colored palette for the scatter plots to use.
+This is done by passing in an array of color strings to the component with the
+`color` prop. The displayed point series will cycle through the provided colors.
+
+#### User-provided Color function
+The user can specify the color for various lines by providing a function
+as well. One can expect to receive the index of the line (first group in the
+inputted data will have index 0, next group will have index 1, and so on),
+as well as the group associated with the line, if there is one. In the
+example below, color is decided based on the group:
+
+```javascript
+
+colorMe(i, group) {
+  if (group === "male"){
+    return "blue"
+  } else if (group === "female") {
+    return "pink"
+  }
+}
+render() {
+	return(
+		<ScatterPlot data={data} color={this.colorMe} />
+	)
+}
+```
+
+### Graph Style
+The ScatterPlot draws a trendline for the data by default. This can be disabled
+by passing in a `showTrendline` prop with a value of `false`.
+
+The ScatterPlot also offers some customization with regards to the actual graph elements.
+These can be controlled with a `graphStyle` prop that is passed in as a javascript
+object. Keys to include can be the following:
+
+* trendlineColor
+	* Determines the color of the drawn trendline
+	* Defaults to `#C4C4C4`
+	* Accepts any color string
+* trendlineWidth
+	* Determines the width of the drawn trendline
+	* Defaults to `1.5`
+	* Accepts any number
+* trendlineOpacity
+	* Determines the opacity of the drawn trendline
+	* Defaults to 1
+	* Accepts any number
 
 ### Axis Customization
-- `xSteps` (integer) defaults to number calculated by program based off of x-axis data
-	- specify number of steps on the x-axis
-- `ySteps` (integer) defaults to number calculated by program based off of y-axis data
-	- specify number of steps on the y-axis
-- `xScale` defaults to `"lin"`
-	- `"lin"`: linear scale
-	- `"log"`: logarithmic scale (base 10)
-	- `"per"`: percentage scale (0 to 100%)
-- `yScale` defaults to `"lin"`, same possible values as `xScale`
-- `xLines` defaults to `"none"`
-	- `"none"`: no vertical backing lines for x-axis values
-	- `"dash"`: dashed vertical backing lines
-	- `"solid"`: solid vertical backing lines
-- `yLines` defaults to `"none"`
-	- `"none"`: no horizontal backing lines for y-axis values
-	- `"dash"`: dashed horizontal backing lines
-	- `"solid"`: solid horizontal backing lines
-- `transpose`: defaults to `"no"`
-	- `"no"`: first value of tuple on x-axis, second value of tuple on y-axis
-	- `"yes"`: first value of tuple on y-axis, second value of tuple on x-axis
-- `yStart`: defaults to `"break"`
-	- `"origin"`: y-axis starts at origin (for linear scale)
-	- `"break"`: y-axis starts at the lowest y-value in dataset (break in axis)
+Replot ScatterPlots allow for incredible customization of the graph axis. A complete
+explanation of axis customization can be found below -:
 
-### Line Customization
-- `shape`: defaults to `"none"`
-	- `"none"`: line is continuous without any shape marking the data points
-	- `"disc"`: data points are marked by a filled circle
-	- `"circle"`: data points are marked by an unfilled circle
-	- `"square"`: data points are marked by a square
-	- `"triangle"`: data points are marked by a triangle
+#### Titles
+By default, the ScatterPlot does not display any axis titles. If the user wishes to
+include titles, they can pass in some or all of the `xTitle`, `yTitle`, and
+`graphTitle` props. These props accept a string value, displayed at the appropriate
+location on the graph. To compensate for the inclusion of a title, the graph content
+will be pushed further in, but overall the size of the component will remain what
+was specified by the user.
 
-### Legend Customization
-- `legendPosition`: defaults to `"right"`
-	- `"none"`: no legend display
-	- `"right"`: legend displayed to the right of the chart
-	- `"left"`: legend displayed to the left of the chart
-	- `"top"`: legend displayed on top of the chart (under the title)
-	- `"bottom"`: legend displayed below the chart
+#### Showing/Hiding Axis Elements
+By default, the ScatterPlot shows the entirety of the axes, including lines, labels,
+and gridlines. These can each individually be disabled by passing in boolean
+values of false to the following props:
+- showXAxisLine
+- showYAxisLine
+- showXLabels
+- showYLabels
+- showGrid
+- showLegend
+
+#### Styling the axis
+In addition to enabling/disabling titles and axis components, the actual style of
+the components can be altered as well, with the use of one `axisStyle` prop that
+takes the form of a JavaScript object.
+
+Explanations and defaults follow:
+
+* axisColor
+  * modifies the color of the axis line
+  * defaults to `#000000`
+  * accepts any color string
+* labelColor
+  * modifies the color of both axis labels
+  * defaults to `#000000`
+  * accepts any color string
+* titleColor
+  * modifies the color of all graph titles
+  * defaults to `#000000`
+  * accepts any color string
+* labelColor
+  * modifies the color of axis gridlines
+  * defaults to `#DDDDDD`
+  * accepts any color string
+* lineWidth
+  * modifies the thickness of axis lines
+  * defaults to `2`
+  * accepts any number
+* lineOpacity
+  * modifies the opacity of axis lines
+  * defaults to `1`
+  * accepts any number
+
+Example of using the axisStyle prop:
+
+```javascript
+let style = {
+    axisColor: "#f17e33",
+    labelColor: "blue",
+    titleColor: "#000000",
+    gridColor: "#DDDDDD",
+    lineWidth: 5,
+    lineOpacity: .5
+  }
+
+render() {
+  ...
+
+  return(
+    <ScatterPlot data={data} axisStyle={style}/>
+  )
+}
+```
+
+#### Styling the legend
+The ScatterPlot will include a legend by default if a `groupKey` is included.
+If not disabled, the legend can be customized through a single `legendStyle` prop that takes the form of a JavaScript object.
+
+Explanations and defaults follow:
+* fontColor
+	* Modifies the color of the font used in the legend
+	* Defaults to `"#000000"`
+	* Accepts any color string
+* backgroundColor
+	* Modifies the background color of the legend
+	* Defaults to `"none"`
+	* Accepts any color string
+* showBorder
+ 	* Determines whether a border will be drawn around the legend
+	* Defaults to `true`
+	* Accepts `true` or `false`
+* borderColor
+	* Modifies the color of the border of the legend
+	* Defaults to `"#000000"`
+	* Accepts any color string
+
+### Initial Animation
+Initial animation is enabled by default, resulting in the ScatterPlot points growing out
+from the trendline. This can be disabled using the
+`initialAnimation` prop, passing in a value of false.
