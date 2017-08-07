@@ -388,7 +388,8 @@ ScatterPlot.propTypes = {
   showTrendline: PropTypes.bool,
   trendlineColor: PropTypes.string,
   trendlineWidth: PropTypes.number,
-  trendlineOpacity: PropTypes.number
+  trendlineOpacity: PropTypes.number,
+  initialAnimation: PropTypes.bool
 }
 
 export default ScatterPlotResponsive
