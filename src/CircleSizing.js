@@ -1,11 +1,10 @@
 class CircleSizing {
-  constructor(data, circleKey, maxRadius, minRadius, yKey) {
+
+  constructor(data, weightKey, maxRadius, minRadius) {
     this.data = data
-    this.circleKey = circleKey
+    this.weightKey = weightKey
     this.maxRadius = maxRadius
     this.minRadius = minRadius
-
-    this.yKey = yKey
     this.smallestWeight = Infinity
     this.largestWeight = 0
 
@@ -13,11 +12,11 @@ class CircleSizing {
     this.sortedData.sort((a, b) => a[this.weightKey] - b[this.weightKey])
 
     for (let member of this.sortedData) {
-      if (member[this.circleKey] < this.smallestWeight && member[this.circleKey] !== null) {
-        this.smallestWeight = member[this.circleKey]
+      if (member[this.weightKey] < this.smallestWeight && member[this.weightKey] !== null) {
+        this.smallestWeight = member[this.weightKey]
       }
-      if (member[this.circleKey] > this.largestWeight && member[this.circleKey] !== null) {
-        this.largestWeight = member[this.circleKey]
+      if (member[this.weightKey] > this.largestWeight && member[this.weightKey] !== null) {
+        this.largestWeight = member[this.weightKey]
       }
     }
   }
@@ -25,10 +24,9 @@ class CircleSizing {
   circleSizes() {
     let newData = []
     let radius
-    if (this.circleKey == "default") {
+    if (!this.weightKey) {
       for (let member of this.data) {
-        radius = this.minRadius
-        member["radius"] = radius
+        member.radius = this.minRadius
         newData.push(member)
       }
     } else {
@@ -36,19 +34,19 @@ class CircleSizing {
       let stepSize = (this.maxRadius-this.minRadius)/(this.largestWeight-this.smallestWeight)
 
       for (let member of this.data) {
-        if (member[this.circleKey] == this.smallestWeight) {
+        if (member[this.weightKey] == this.smallestWeight) {
           radius = this.minRadius //smallest weight has minRadius
-        } else if (member[this.circleKey] == this.largestWeight) {
+        } else if (member[this.weightKey] == this.largestWeight) {
           radius = this.maxRadius //largest weight has maxRadius
         } else {
-          let ratio = member[this.circleKey] - this.smallestWeight
+          let ratio = member[this.weightKey] - this.smallestWeight
           if (ratio > 0) {
             radius = this.minRadius + (ratio * stepSize)
           } else {
             radius = 0 //ratio is negative = value was removed/zero
           }
         }
-        member["radius"] = radius
+        member.radius = radius
         newData.push(member)
       }
     }

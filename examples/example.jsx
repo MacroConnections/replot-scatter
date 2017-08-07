@@ -6,9 +6,9 @@ class KeyValueRow extends React.Component {
 
   changeHandler(e) {
     this.props.updateData({
-      continent: this.props.continent,
-      population: this.props.population,
-      gdp: e.target.value || "0"
+      gender: this.props.gender,
+      height: this.props.height,
+      weight: e.target.value || "0"
     })
   }
 
@@ -20,11 +20,11 @@ class KeyValueRow extends React.Component {
     }
 
     return(
-      <tr key={this.props.continent.concat(this.props.population)}>
-        <td style={style.cell}>{this.props.continent} </td>
-        <td style={style.cell}>{this.props.population}</td>
+      <tr>
+        <td style={style.cell}>{this.props.gender} </td>
+        <td style={style.cell}>{this.props.height}</td>
         <td style={style.cell}>
-          <input type="text" value={parseFloat(this.props.gdp)}
+          <input type="text" value={parseFloat(this.props.weight)}
             onChange={this.changeHandler.bind(this)} />
         </td>
       </tr>
@@ -44,11 +44,13 @@ class KeyValueTable extends React.Component {
       }
     }
     let rows = []
-    for (let dataPoint of this.props.data) {
+    let dataPoint
+    for (let i = 0; i < this.props.data.length; i++) {
+      dataPoint = this.props.data[i]
       rows.push(
-        <KeyValueRow key={dataPoint.continent.concat(dataPoint.population)}
-          continent={dataPoint.continent} population={dataPoint.population} gdp={dataPoint.gdp}
-          updateData={this.props.updateData.bind(this)} />
+        <KeyValueRow key={"row" + i}
+          gender={dataPoint.gender} height={dataPoint.height} weight={dataPoint.weight}
+          updateData={this.props.updateData} />
       )
     }
 
@@ -69,7 +71,7 @@ class ScaleButton extends React.Component {
 
   clickHandler() {
     this.props.updateScale({
-      scale: this.props.title
+      yScale: this.props.title
     })
   }
 
@@ -100,7 +102,7 @@ class ScaleSwitch extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      scale: "log"
+      yScale: "log"
     }
   }
 
@@ -112,17 +114,17 @@ class ScaleSwitch extends React.Component {
       }
     }
 
-    let types = ["default", "log"]
+    let types = ["lin", "log"]
     let buttons = []
     let color = ""
     for (var i=0; i < types.length; i++) {
-      if (types[i] == this.props.scale) {
+      if (types[i] == this.props.yScale) {
         color = "#00AA00"
       } else {
         color = "#444444"
       }
       buttons.push(
-        <ScaleButton title={types[i]}
+        <ScaleButton key={types[i]} title={types[i]}
         updateScale={this.props.updateScale.bind(this)} color={color} />
       )
     }
@@ -142,58 +144,33 @@ class ExampleApp extends React.Component {
     super(props)
     this.state = {
       data: [
-        {continent: "Asia", country: "China", population: 1388232693, gdp: 11795297000},
-        {continent: "Asia", country: "Japan", population: 126045211, gdp: 4841221000},
-        {continent: "Asia", country: "India", population: 1342512706, gdp: 2454458000},
-        {continent: "Asia", country: "South Korea", population: 50704971, gdp: 1498074000},
-        {continent: "Asia", country: "Indonesia", population: 263510146, gdp: 1020515000},
-        {continent: "Asia", country: "Saudi Arabia", population: 32742664, gdp: 707379000},
-        {continent: "S. America", country: "Brazil", population: 211243220, gdp: 2140940000},
-        {continent: "S. America", country: "Argentina", population: 44272125, gdp: 628935000},
-        {continent: "S. America", country: "Colombia", population: 49067981, gdp: 306439000},
-        {continent: "S. America", country: "Venezuela", population: 31925705, gdp: 251589000},
-        {continent: "S. America", country: "Chile", population: 18313495, gdp: 251220000},
-        {continent: "S. America", country: "Peru", population: 32166473, gdp: 207072000},
-        {continent: "Europe", country: "Germany", population: 80636124, gdp: 3423287000},
-        {continent: "Europe", country: "UK", population: 65511098, gdp: 2496757000},
-        {continent: "Europe", country: "France", population: 64938716, gdp: 2420440000},
-        {continent: "Europe", country: "Italy", population: 59797978, gdp: 1807425000},
-        {continent: "Europe", country: "Russia", population: 143375006, gdp: 1560706000},
-        {continent: "Europe", country: "Spain", population: 46070146, gdp: 1232440000},
-        {continent: "Africa", country: "Nigeria", population: 191835936, gdp: 400621000},
-        {continent: "Africa", country: "Egypt", population: 95215102, gdp: 332349000},
-        {continent: "Africa", country: "South Africa", population: 55436360, gdp: 317568000},
-        {continent: "Africa", country: "Algeria", population: 41063753, gdp: 173947000},
-        {continent: "Africa", country: "Angola", population: 26655513, gdp: 122365000},
-        {continent: "Africa", country: "Sudan", population: 42166323, gdp: 115874000},
+        {gender: "male", height: 70, weight: 155, shoeSize: 10},
+        {gender: "male", height: 72, weight: 144, shoeSize: 12},
+        {gender: "male", height: 73, weight: 158, shoeSize: 11.5},
+        {gender: "male", height: 72, weight: 160, shoeSize: 11},
+        {gender: "male", height: 77, weight: 186, shoeSize: 13},
+        {gender: "male", height: 68, weight: 153, shoeSize: 10},
+        {gender: "male", height: 69, weight: 160, shoeSize: 9},
+        {gender: "male", height: 67, weight: 166, shoeSize: 9.5},
+        {gender: "male", height: 64, weight: 169, shoeSize: 9},
+        {gender: "male", height: 63, weight: 126, shoeSize: 9.5},
+        {gender: "male", height: 66.5, weight: 120, shoeSize: 9},
+        {gender: "male", height: 65.5, weight: 147, shoeSize: 11},
+        {gender: "female", height: 60, weight: 90, shoeSize: 6},
+        {gender: "female", height: 63.5, weight: 100, shoeSize: 6.5},
+        {gender: "female", height: 62, weight: 102, shoeSize: 6.5},
+        {gender: "female", height: 65, weight: 112, shoeSize: 7},
+        {gender: "female", height: 59, weight: 90, shoeSize: 6},
+        {gender: "female", height: 58.5, weight: 95, shoeSize: 5.5},
+        {gender: "female", height: 61.5, weight: 115, shoeSize: 6},
+        {gender: "female", height: 69, weight: 125, shoeSize: 8},
+        {gender: "female", height: 70, weight: 135, shoeSize: 8.5},
+        {gender: "female", height: 58.5, weight: 140, shoeSize: 4.5},
+        {gender: "female", height: 68, weight: 158, shoeSize: 7.5},
+        {gender: "female", height: 64, weight: 160, shoeSize: 7.5},
+        {gender: "female", height: 65, weight: 130.5, shoeSize: 7},
       ],
-      // data: [
-      //   {continent: "Asia", country: "China", population: 1, gdp: 1},
-      //   {continent: "Asia", country: "Japan", population: 2, gdp: 2},
-      //   {continent: "Asia", country: "India", population: 3, gdp: 3},
-      //   {continent: "Asia", country: "South Korea", population: 4, gdp: 4},
-      //   {continent: "Asia", country: "Indonesia", population: 5, gdp: 5},
-      //   {continent: "Asia", country: "Saudi Arabia", population: 6, gdp: 6},
-      //   {continent: "S. America", country: "Brazil", population: 7, gdp: 7},
-      //   {continent: "S. America", country: "Argentina", population: 8, gdp: 8},
-      //   {continent: "S. America", country: "Colombia", population: 9, gdp: 9},
-      //   {continent: "S. America", country: "Venezuela", population: 10, gdp: 10},
-      //   {continent: "S. America", country: "Chile", population: 11, gdp: 11},
-      //   {continent: "S. America", country: "Peru", population: 12, gdp: 12},
-      //   {continent: "Europe", country: "Germany", population: 13, gdp: 13},
-      //   {continent: "Europe", country: "UK", population: 14, gdp: 14},
-      //   {continent: "Europe", country: "France", population: 15, gdp: 15},
-      //   {continent: "Europe", country: "Italy", population: 16, gdp: 16},
-      //   {continent: "Europe", country: "Russia", population: 17, gdp: 17},
-      //   {continent: "Europe", country: "Spain", population: 18, gdp: 18},
-      //   {continent: "Africa", country: "Nigeria", population: 19, gdp: 19},
-      //   {continent: "Africa", country: "Egypt", population: 20, gdp: 20},
-      //   {continent: "Africa", country: "South Africa", population: 21, gdp: 21},
-      //   {continent: "Africa", country: "Algeria", population: 22, gdp: 22},
-      //   {continent: "Africa", country: "Angola", population: 23, gdp: 23},
-      //   {continent: "Africa", country: "Sudan", population: 24, gdp: 24},
-      // ],
-      scale: "log"
+      yScale: "log"
     }
   }
 
@@ -201,33 +178,54 @@ class ExampleApp extends React.Component {
     let mutatedData = JSON.parse(JSON.stringify(this.state.data))
     let chosenIndex = -1
     for (let index=0; index < mutatedData.length; index++) {
-      if (mutatedData[index].continent === mutatedObject.continent && mutatedData[index].population === mutatedObject.population) {
+      if (mutatedData[index].gender === mutatedObject.gender && mutatedData[index].height === mutatedObject.height) {
         chosenIndex = index
         break
       }
     }
+    console.log(chosenIndex)
     if (chosenIndex > -1) {
-      mutatedData[chosenIndex].gdp = parseFloat(mutatedObject.gdp)
+      mutatedData[chosenIndex].weight = parseFloat(mutatedObject.weight)
       this.setState({data: mutatedData})
     }
   }
 
   updateScale(mutatedObject) {
-    this.setState({scale: mutatedObject.scale})
+    this.setState({yScale: mutatedObject.yScale})
   }
+
+  colorMe(index, group) {
+    if (group === "male") {
+      return "blue"
+    } else if (group === "female") {
+      return "pink"
+    }
+  }
+
+
 
   render() {
     return(
       <div className="container">
-        <h1 style={{textAlign: "center"}}> Ent: Scatterplots for react </h1>
-        <KeyValueTable data={this.state.data} updateData={this.updateData.bind(this)} />
-        <ScaleSwitch scale={this.state.scale} updateScale={this.updateScale.bind(this)} />
-        <div style={{width:"70%", float:"right", marginTop:"50px", padding:"50px", backgroundColor:"#FFFFFF"}}>
-          <ScatterPlot data={this.state.data}
-            titleKey="continent" xKey="population" yKey="gdp" minRadius={3}
-            scale={this.state.scale} grid="default" legend="default" color={this.state.color}
-            showTrendline="true"/>
+        <h1 style={{textAlign: "center"}}> ScatterPlots for React </h1>
+        <div style={{width:"70%", float:"left", padding:"50px"}}>
+          <h2>Basic ScatterPlot Usage</h2>
+          <ScatterPlot data={this.state.data} xKey="height" yKey="weight"
+            yScale={this.state.yScale}/>
+          <h2>ScatterPlot with groupKey</h2>
+          <ScatterPlot data={this.state.data} xKey="height" yKey="weight"
+            yScale={this.state.yScale} groupKey="gender"/>
+          <h2>ScatterPlot with groupKey and weightKey</h2>
+          <ScatterPlot data={this.state.data} xKey="height" yKey="weight"
+            yScale={this.state.yScale} groupKey="gender" weightKey="shoeSize"/>
+          <h2>ScatterPlot with groupKey, weightKey, axis titles, and color customization</h2>
+          <ScatterPlot data={this.state.data} xKey="height" yKey="weight"
+            yScale={this.state.yScale} groupKey="gender" weightKey="shoeSize"
+            color={this.colorMe} xTitle="Heights" yTitle="Weights"
+            axisStyle={{axisColor: "#f17e33", labelColor: "#f17e33"}}/>
         </div>
+        <ScaleSwitch yScale={this.state.yScale} updateScale={this.updateScale.bind(this)} />
+        <KeyValueTable data={this.state.data} updateData={this.updateData.bind(this)} />
       </div>
     )
   }
