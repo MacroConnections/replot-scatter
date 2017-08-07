@@ -11266,7 +11266,8 @@ ScatterPlot.propTypes = {
   showTrendline: _propTypes2.default.bool,
   trendlineColor: _propTypes2.default.string,
   trendlineWidth: _propTypes2.default.number,
-  trendlineOpacity: _propTypes2.default.number
+  trendlineOpacity: _propTypes2.default.number,
+  initialAnimation: _propTypes2.default.bool
 };
 
 exports.default = ScatterPlotResponsive;
