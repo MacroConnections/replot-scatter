@@ -151,6 +151,53 @@ render() {
 }
 ```
 
+### Tooltip
+ScatterPlots are capable of utilizing a tooltip to display more specific information
+about the points. By default, the tooltip is off, but can be activated by
+passing in a `tooltip` prop (no value needed). The tooltip features two different
+color schemes, dark and light, which can be specified by a
+`tooltipColor` prop, with a value of "dark" or "light".
+
+```javascript
+render() {
+  ...
+
+  return(
+    <ScatterPlot data={data} tooltip tooltipColor="light" />
+  )
+}
+```
+
+#### Customizing Tooltip contents
+By default, the tooltip will display the x and y value, as well as the group (if
+it exist) and weight (if it exists) of the point the user is hovering over.
+The user can customize exactly what is displayed inside the tooltip by passing
+in a `tooltipContents` prop in the form of a Javascript function. The user can
+expect to receive the raw data object that corresponds to the point being hovered over.
+
+```javascript
+fillTooltip(data){
+  let contents
+  if (data.height > 150) {
+    return (
+      <span> This is a tall person! </span>
+    )
+  }
+  return (
+    <span> This is NOT a tall person. </span>
+  )
+}
+
+render() {
+  ...
+
+  return(
+    <ScatterPlot data={data}
+      tooltip tooltipContents={this.fillTooltip}/>
+  )
+}
+```
+
 ### Graph Style
 The ScatterPlot draws a trendline for the data by default. This can be disabled
 by passing in a `showTrendline` prop with a value of `false`.

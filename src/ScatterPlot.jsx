@@ -1,7 +1,7 @@
 import React from "react"
 import {spring, Motion} from "react-motion"
 import PropTypes from "prop-types"
-import {Resize, Axis} from "replot-core"
+import {Resize, Tooltip, Axis} from "replot-core"
 import CircleSizing from "./CircleSizing.js"
 
 class Point extends React.Component {
@@ -28,7 +28,9 @@ class Point extends React.Component {
           style =>
           <circle
             cx={style.x} cy={style.y} r={style.radius}
-            stroke={this.props.color} fill={this.props.color} />
+            stroke={this.props.color} fill={this.props.color}
+            onMouseOver={this.props.activateTooltip.bind(this, this.props.raw)}
+            onMouseOut={this.props.deactivateTooltip.bind(this)}/>
         }
       </Motion>
     )
@@ -46,8 +48,11 @@ class PointSeries extends React.Component {
       series.push(
         <Point key={this.props.group + i}
           x={point.x} y={point.y} radius={point.r}
+          raw={point.raw}
           equation={this.props.equation} color={point.color}
-          initialAnimation={this.props.initialAnimation}/>
+          initialAnimation={this.props.initialAnimation}
+          activateTooltip={this.props.activateTooltip}
+          deactivateTooltip={this.props.deactivateTooltip} />
       )
     }
 
@@ -122,7 +127,13 @@ class SeriesContainer extends React.Component {
             } else {
               x = (dataPoint[this.props.xKey] - this.props.minX) * xUnit
             }
-            set.push({x: x, y: y, r: dataPoint.radius, color: this.props.color(i, groups[i])})
+            set.push({
+              x: x,
+              y: y,
+              r: dataPoint.radius,
+              color: this.props.color(i, groups[i]),
+              raw: dataPoint
+            })
             sumX += x
             sumY += y
             sumXY += (x*y)
@@ -143,7 +154,13 @@ class SeriesContainer extends React.Component {
           y = (this.props.maxY - dataPoint[this.props.yKey]) * yUnit
         }
         x = (dataPoint[this.props.xKey] - this.props.minX) * xUnit
-        set.push({x: x, y: y, r: dataPoint.radius, color: this.props.color(0)})
+        set.push({
+          x: x,
+          y: y,
+          r: dataPoint.radius,
+          color: this.props.color(0),
+          raw: dataPoint
+        })
         sumX += x
         sumY += y
         sumXY += (x*y)
@@ -161,7 +178,9 @@ class SeriesContainer extends React.Component {
       series.push(
         <PointSeries key={member.group} points={member.points}
           group={member.group} equation={eq}
-          initialAnimation={this.props.initialAnimation}/>
+          initialAnimation={this.props.initialAnimation}
+          activateTooltip={this.props.activateTooltip}
+          deactivateTooltip={this.props.deactivateTooltip} />
       )
     }
 
@@ -207,6 +226,54 @@ class SeriesContainer extends React.Component {
 }
 
 class ScatterPlot extends React.Component {
+
+  constructor(){
+    super()
+    this.state = {
+      tooltipContents: null,
+      mouseOver: false,
+      mouseX: null,
+      mouseY: null
+    }
+  }
+
+  activateTooltip(data) {
+    let newContents
+    if (this.props.tooltipContents){
+      newContents = this.props.tooltipContents(data)
+    }
+    else {
+      newContents = (
+        <div>
+          <span>{this.props.xKey}: {data[this.props.xKey]}</span><br/>
+          <span>{this.props.yKey}: {data[this.props.yKey]}</span><br/>
+          {data[this.props.groupKey] &&
+            <span>{this.props.groupKey}: {data[this.props.groupKey]}<br/></span>
+          }
+          {data[this.props.weightKey] &&
+            <span>{this.props.weightKey}: {data[this.props.weightKey]}<br/></span>
+          }
+        </div>
+      )
+    }
+    this.setState({
+      tooltipContents: newContents,
+      mouseOver: true,
+    })
+  }
+
+  deactivateTooltip() {
+    this.setState({
+      mouseOver: false
+    })
+  }
+
+  updateMousePos(e) {
+    this.setState({
+      mouseX: e.pageX,
+      mouseY: e.pageY - 10
+    })
+  }
 
   getLegend() {
     let groups = [...new Set(this.props.data.map(item => item[this.props.groupKey]))]
@@ -282,14 +349,26 @@ class ScatterPlot extends React.Component {
           groupKey={this.props.groupKey} weightKey={this.props.weightKey}
           minRadius={this.props.minRadius} maxRadius={this.props.maxRadius}
           showTrendline={this.props.showTrendline} color={this.colorPoints.bind(this)}
-          style={this.props.graphStyle} initialAnimation={this.props.initialAnimation}/>
+          style={this.props.graphStyle} initialAnimation={this.props.initialAnimation}
+          activateTooltip={this.activateTooltip.bind(this)}
+          deactivateTooltip={this.deactivateTooltip.bind(this)} />
       </Axis>
     )
 
     return(
-      <svg width={this.props.width} height={this.props.height}>
-        {graph}
-      </svg>
+      <div onMouseMove={this.props.tooltip ? this.updateMousePos.bind(this) : null}>
+        {this.props.tooltip &&
+          <Tooltip
+            x={this.state.mouseX} y={this.state.mouseY}
+            active={this.state.mouseOver}
+            contents={this.state.tooltipContents}
+            colorScheme={this.props.tooltipColor}
+          />
+        }
+        <svg width={this.props.width} height={this.props.height}>
+          {graph}
+        </svg>
+      </div>
     )
   }
 
