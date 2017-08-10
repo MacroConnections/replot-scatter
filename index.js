@@ -881,7 +881,9 @@ var Point = function (_React$Component) {
         function (style) {
           return _react2.default.createElement("circle", {
             cx: style.x, cy: style.y, r: style.radius,
-            stroke: _this2.props.color, fill: _this2.props.color });
+            stroke: _this2.props.color, fill: _this2.props.color,
+            onMouseOver: _this2.props.activateTooltip.bind(_this2, _this2.props.raw),
+            onMouseOut: _this2.props.deactivateTooltip.bind(_this2) });
         }
       );
     }
@@ -908,8 +910,11 @@ var PointSeries = function (_React$Component2) {
         var point = this.props.points[i];
         series.push(_react2.default.createElement(Point, { key: this.props.group + i,
           x: point.x, y: point.y, radius: point.r,
+          raw: point.raw,
           equation: this.props.equation, color: point.color,
-          initialAnimation: this.props.initialAnimation }));
+          initialAnimation: this.props.initialAnimation,
+          activateTooltip: this.props.activateTooltip,
+          deactivateTooltip: this.props.deactivateTooltip }));
       }
 
       return _react2.default.createElement(
@@ -1011,7 +1016,13 @@ var SeriesContainer = function (_React$Component3) {
                 } else {
                   x = (dataPoint[this.props.xKey] - this.props.minX) * xUnit;
                 }
-                set.push({ x: x, y: y, r: dataPoint.radius, color: this.props.color(i, groups[i]) });
+                set.push({
+                  x: x,
+                  y: y,
+                  r: dataPoint.radius,
+                  color: this.props.color(i, groups[i]),
+                  raw: dataPoint
+                });
                 sumX += x;
                 sumY += y;
                 sumXY += x * y;
@@ -1054,7 +1065,13 @@ var SeriesContainer = function (_React$Component3) {
               y = (this.props.maxY - _dataPoint[this.props.yKey]) * yUnit;
             }
             x = (_dataPoint[this.props.xKey] - this.props.minX) * xUnit;
-            set.push({ x: x, y: y, r: _dataPoint.radius, color: this.props.color(0) });
+            set.push({
+              x: x,
+              y: y,
+              r: _dataPoint.radius,
+              color: this.props.color(0),
+              raw: _dataPoint
+            });
             sumX += x;
             sumY += y;
             sumXY += x * y;
@@ -1093,7 +1110,9 @@ var SeriesContainer = function (_React$Component3) {
 
           series.push(_react2.default.createElement(PointSeries, { key: member.group, points: member.points,
             group: member.group, equation: eq,
-            initialAnimation: this.props.initialAnimation }));
+            initialAnimation: this.props.initialAnimation,
+            activateTooltip: this.props.activateTooltip,
+            deactivateTooltip: this.props.deactivateTooltip }));
         }
       } catch (err) {
         _didIteratorError3 = true;
@@ -1158,10 +1177,82 @@ var ScatterPlot = function (_React$Component4) {
   function ScatterPlot() {
     _classCallCheck(this, ScatterPlot);
 
-    return _possibleConstructorReturn(this, (ScatterPlot.__proto__ || Object.getPrototypeOf(ScatterPlot)).apply(this, arguments));
+    var _this6 = _possibleConstructorReturn(this, (ScatterPlot.__proto__ || Object.getPrototypeOf(ScatterPlot)).call(this));
+
+    _this6.state = {
+      tooltipContents: null,
+      mouseOver: false,
+      mouseX: null,
+      mouseY: null
+    };
+    return _this6;
   }
 
   _createClass(ScatterPlot, [{
+    key: "activateTooltip",
+    value: function activateTooltip(data) {
+      var newContents = void 0;
+      if (this.props.tooltipContents) {
+        newContents = this.props.tooltipContents(data);
+      } else {
+        newContents = _react2.default.createElement(
+          "div",
+          null,
+          _react2.default.createElement(
+            "span",
+            null,
+            this.props.xKey,
+            ": ",
+            data[this.props.xKey]
+          ),
+          _react2.default.createElement("br", null),
+          _react2.default.createElement(
+            "span",
+            null,
+            this.props.yKey,
+            ": ",
+            data[this.props.yKey]
+          ),
+          _react2.default.createElement("br", null),
+          data[this.props.groupKey] && _react2.default.createElement(
+            "span",
+            null,
+            this.props.groupKey,
+            ": ",
+            data[this.props.groupKey],
+            _react2.default.createElement("br", null)
+          ),
+          data[this.props.weightKey] && _react2.default.createElement(
+            "span",
+            null,
+            this.props.weightKey,
+            ": ",
+            data[this.props.weightKey],
+            _react2.default.createElement("br", null)
+          )
+        );
+      }
+      this.setState({
+        tooltipContents: newContents,
+        mouseOver: true
+      });
+    }
+  }, {
+    key: "deactivateTooltip",
+    value: function deactivateTooltip() {
+      this.setState({
+        mouseOver: false
+      });
+    }
+  }, {
+    key: "updateMousePos",
+    value: function updateMousePos(e) {
+      this.setState({
+        mouseX: e.pageX,
+        mouseY: e.pageY - 10
+      });
+    }
+  }, {
     key: "getLegend",
     value: function getLegend() {
       var _this7 = this;
@@ -1250,13 +1341,25 @@ var ScatterPlot = function (_React$Component4) {
           groupKey: this.props.groupKey, weightKey: this.props.weightKey,
           minRadius: this.props.minRadius, maxRadius: this.props.maxRadius,
           showTrendline: this.props.showTrendline, color: this.colorPoints.bind(this),
-          style: this.props.graphStyle, initialAnimation: this.props.initialAnimation })
+          style: this.props.graphStyle, initialAnimation: this.props.initialAnimation,
+          activateTooltip: this.activateTooltip.bind(this),
+          deactivateTooltip: this.deactivateTooltip.bind(this) })
       );
 
       return _react2.default.createElement(
-        "svg",
-        { width: this.props.width, height: this.props.height },
-        graph
+        "div",
+        { onMouseMove: this.props.tooltip ? this.updateMousePos.bind(this) : null },
+        this.props.tooltip && _react2.default.createElement(_replotCore.Tooltip, {
+          x: this.state.mouseX, y: this.state.mouseY,
+          active: this.state.mouseOver,
+          contents: this.state.tooltipContents,
+          colorScheme: this.props.tooltipColor
+        }),
+        _react2.default.createElement(
+          "svg",
+          { width: this.props.width, height: this.props.height },
+          graph
+        )
       );
     }
   }]);
