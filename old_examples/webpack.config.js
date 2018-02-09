@@ -1,6 +1,8 @@
-module.exports = function() {
+module.exports = function () {
   return {
-    entry: "./index.jsx",
+    entry: {
+      example: "./example.jsx"
+    },
     output: {
       path: __dirname + "/static",
       filename: "bundle.js"
