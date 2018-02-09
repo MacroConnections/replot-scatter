@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import ScatterPlot from "../src/index.jsx"
+import ScatterPlot from "../index.js"
 
 class KeyValueRow extends React.Component {
 

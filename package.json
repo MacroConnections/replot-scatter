@@ -38,13 +38,16 @@
     "babel-preset-react": "^6.23.0",
     "eslint": "^3.16.1",
     "eslint-plugin-react": "^6.10.0",
+    "humanize-plus": "^1.8.2",
+    "radium": "^0.21.2",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "replot-core": "git+ssh://git@github.com/MacroConnections/replot-core.git",
+    "replot-helpers": "git+ssh://git@github.com/MacroConnections/replot-helpers.git",
     "webpack": "^2.2.1"
   },
   "dependencies": {
-    "humanize-plus": "^1.8.2",
-    "react-motion": "^0.4.7",
-    "replot-core": "git+ssh://git@github.com/MacroConnections/replot-core.git"
+    "prop-types": "^15.6.0",
+    "react-motion": "^0.5.2"
   }
 }
