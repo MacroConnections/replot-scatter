@@ -328,6 +328,29 @@ class ScatterPlot extends React.Component {
     }
 
     let graph
+    let axisStyle = {
+      titleColor: this.props.graphTitleColor,
+      titleFontSize: this.props.titleFontSize,
+      titleFontFamily: this.props.titleFontFamily,
+      labelColor: this.props.labelColor,
+      labelFontSize: this.props.labelFontSize,
+      labelFontFamily: this.props.labelFontFamily,
+      axisColor: this.props.axisColor,
+      lineWidth: this.props.axisWidth,
+      lineOpacity: this.props.axisOpacity,
+      gridColor: this.props.gridColor,
+      gridWidth: this.props.gridWidth,
+      gridOpacity: this.props.gridOpacity,
+      tickColor: this.props.tickColor,
+      tickWidth: this.props.tickWidth,
+      tickOpacity: this.props.tickOpacity,
+    }
+    let legendStyle = {
+      fontColor: this.props.legendFontColor,
+      backgroundColor: this.props.legendBackground,
+      showBorder: this.props.legendShowBorder,
+      borderColor: this.props.legendBorderColor,
+    }
 
     graph = (
       <Axis key="axis" width={this.props.width} height={this.props.height}
@@ -335,11 +358,11 @@ class ScatterPlot extends React.Component {
         yTitle={this.props.yTitle} showXAxisLine={this.props.showXAxisLine}
         showXLabels={this.props.showXLabels} showYAxisLine={this.props.showYAxisLine}
         showYLabels={this.props.showYLabels} showGrid={this.props.showGrid}
-        axisStyle={this.props.axisStyle} minY={minY}
+        axisStyle={axisStyle} minY={minY}
         maxY={maxY+yPadding} ySteps={this.props.ySteps} yScale={this.props.yScale}
         xAxisMode="continuous" minX={minX}
         maxX={maxX+xPadding} xScale={this.props.xScale}
-        legendValues={this.props.groupKey ? this.getLegend() : null} legendStyle={this.props.legendStyle}
+        legendValues={this.props.groupKey ? this.getLegend() : null} legendStyle={legendStyle}
         legendMode={this.props.legendMode} showLegend={this.props.showLegend}>
         <SeriesContainer data={this.props.data} xVals={xVals} minX={minX}
           maxX={maxX+xPadding} yVals={yVals} minY={minY}
@@ -407,25 +430,11 @@ ScatterPlot.defaultProps = {
   yStart: "break",
   xScale: "lin",
   xStart: "break",
-  graphStyle: {
-    trendlineColor: "#C4C4C4",
-    trendlineWidth: 1.5,
-    trendlineOpacity: 1
-  },
-  axisStyle: {
-    axisColor: "#000000",
-    labelColor: "#000000",
-    titleColor: "#000000",
-    gridColor: "#DDDDDD",
-    lineWidth: 2,
-    lineOpacity: 1
-  },
-  legendStyle: {
-    fontColor: "#000000",
-    backgroundColor: "none",
-    showBorder: false,
-    borderColor: "#000000"
-  },
+  trendlineColor: "#AAA",
+  trendlineWidth: 1.5,
+  trendlineOpacity: 1,
+  legendBackgound: "none",
+  legendShowBorder: false,
   initialAnimation: true
 }
 
@@ -455,19 +464,42 @@ ScatterPlot.propTypes = {
   yAxisLine: PropTypes.string,
   yLabel: PropTypes.string,
   yStart: PropTypes.string,
-  grid: PropTypes.string,
-  gridColor: PropTypes.string,
-  legend: PropTypes.string,
-  legendColor: PropTypes.string,
   color: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.array
   ]),
-  axisColor: PropTypes.string,
   showTrendline: PropTypes.bool,
   trendlineColor: PropTypes.string,
   trendlineWidth: PropTypes.number,
   trendlineOpacity: PropTypes.number,
+  circleOpacity: PropTypes.number,
+
+  axisColor: PropTypes.string,
+  axisWidth: PropTypes.number,
+  axisOpacity: PropTypes.number,
+
+  gridColor: PropTypes.string,
+  gridWidth: PropTypes.number,
+  gridOpacity: PropTypes.number,
+
+  tickColor: PropTypes.string,
+  tickWidth: PropTypes.number,
+  tickOpacity: PropTypes.number,
+
+  labelColor: PropTypes.string,
+  labelFontSize: PropTypes.number,
+  labelFontType: PropTypes.number,
+
+  graphTitleColor: PropTypes.string,
+  graphTitleFontSize: PropTypes.number,
+  graphTitleFontType: PropTypes.number,
+
+  showLegend: PropTypes.bool,
+  legendFontColor: PropTypes.string,
+  legendBackground: PropTypes.string,
+  legendShowBorder: PropTypes.bool,
+  legendBorderColor: PropTypes.string,
+
   initialAnimation: PropTypes.bool
 }
 
