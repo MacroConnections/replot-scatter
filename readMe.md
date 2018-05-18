@@ -4,7 +4,7 @@ Intelligent and customizable scatter plot components for react.
 ## Installation
 Only works with React projects. React must be installed separately.
 ```bash
-npm install replot-line
+npm install replot-scatter
 ```
 
 Then with a module bundler like webpack/browserify that supports CommonJS/ES2015
@@ -20,7 +20,7 @@ The only *required* input is proper JSON formatted data.
 
 ### Basic Usage
 In the simplest case, just supply data (as a Javascript array) and specify the
-keys associated with the values -:
+keys associated with the values:
 
 ```javascript
 render() {
@@ -44,11 +44,11 @@ render() {
     {height: 70, weight: 135},
   ],
 
-	return(
-		<ScatterPlot data={data}
-		xKey="height"
-		yKey="weight" />
-	)
+  return(
+    <ScatterPlot data={data}
+        xKey="height"
+        yKey="weight" />
+  )
 }
 ```
 
@@ -69,7 +69,7 @@ size of `minRadius`.
 
 ```javascript
 render() {
-	let data = [
+  let data = [
     {gender: "male", height: 70, weight: 155, shoeSize: 10},
     {gender: "male", height: 72, weight: 144, shoeSize: 12},
     {gender: "male", height: 73, weight: 158, shoeSize: 11.5},
@@ -89,34 +89,55 @@ render() {
     {gender: "female", height: 70, weight: 135, shoeSize: 8.5}
   ]
 
-	return(
-		<ScatterPlot data={data}
-		xKey="height"
-		yKey="weight"
-		groupKey="gender"
-		weightKey="shoeSize"/>
-	)
+  return(
+    <ScatterPlot data={data}
+        xKey="height"
+        yKey="weight"
+        groupKey="gender"
+        weightKey="shoeSize"/>
+  )
 }
 ```
 
 ### Dimensions
-Dimensions may be specified by passing in `width` and `height` props. The
-unit is pixels, and the Scatter Plot defaults to 800 by 600 pixels.
+Dimensions may be specified by passing in `width` and `height` props with numbers 
+in the unit of pixels.
+
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+    	width={600}
+      	height={450}
+    />
+  )
+}
+```
+
+- `width` defaults to `800`
+- `height` defaults to `600`
+
 
 The Scatter Plot will not function with a width that is less than 60 pixels, or with
 a height that is less than 100 pixels.
 
 Width dimensions may also be specified with a string, as a percentage. The width
-will then be calculated as a proportion of the parent container
+will then be calculated as a proportion of the parent container.
 
 ```javascript
 render() {
-
-	return(
-		<ScatterPlot data={data} width="50%" />
-	)
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+        width="50%"
+        height={450}
+    />
+  )
 }
 ```
+
+ Default                   | width={600} height={450}  | width="50%" height={450}        
+:-------------------------:|:-------------------------:|:-------------------------:
+![ScreenshotDefaultDimensions](https://github.com/replot/replot-scatter/raw/master/img/dim_default.png) | ![ScreenshotWidth600pxHeight450px](https://github.com/replot/replot-scatter/raw/master/img/w600_h450.png) | ![ScreenshotWidth50%Height450px](https://github.com/replot/replot-scatter/raw/master/img/w50_percent.png)
 
 ### Colors
 Colors may be specified through 2 different mechanisms, both through a `color` prop.
@@ -124,200 +145,390 @@ If none of the mechanisms are specified, ScatterPlot defaults to a built in
 color palette.
 
 #### User-provided Color Palette
-The user can specify their own desired colored palette for the scatter plots to use.
-This is done by passing in an array of color strings to the component with the
-`color` prop. The displayed point series will cycle through the provided colors.
+Users can specify a list of colors to use as a palette, passed to the `color` prop.
+
+```javascript
+render() {
+  let colors = ["#ff3232", "#ff7f7f", "#ffcccc"]
+
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+    	color={colors}
+    />
+  )
+}
+```
 
 #### User-provided Color function
 The user can specify the color for various lines by providing a function
-as well. One can expect to receive the index of the line (first group in the
-inputted data will have index 0, next group will have index 1, and so on),
-as well as the group associated with the line, if there is one. In the
-example below, color is decided based on the group:
+as well. Expected arguments to the function are the index of the data series (from 0) and the group associated with the line (if it exists).
 
 ```javascript
-
-colorMe(i, group) {
-  if (group === "male"){
+let colorMe = (i, group) => {
+  if (group === "male") {
     return "blue"
-  } else if (group === "female") {
+  } else {
     return "pink"
   }
 }
+
 render() {
-	return(
-		<ScatterPlot data={data} color={this.colorMe} />
-	)
-}
-```
-
-### Tooltip
-ScatterPlots are capable of utilizing a tooltip to display more specific information
-about the points. By default, the tooltip is off, but can be activated by
-passing in a `tooltip` prop (no value needed). The tooltip features two different
-color schemes, dark and light, which can be specified by a
-`tooltipColor` prop, with a value of "dark" or "light".
-
-```javascript
-render() {
-  ...
-
   return(
-    <ScatterPlot data={data} tooltip tooltipColor="light" />
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+    	color={colorMe}
+    />
   )
 }
 ```
 
-#### Customizing Tooltip contents
-By default, the tooltip will display the x and y value, as well as the group (if
-it exist) and weight (if it exists) of the point the user is hovering over.
-The user can customize exactly what is displayed inside the tooltip by passing
-in a `tooltipContents` prop in the form of a Javascript function. The user can
-expect to receive the raw data object that corresponds to the point being hovered over.
-
-```javascript
-fillTooltip(data){
-  let contents
-  if (data.height > 150) {
-    return (
-      <span> This is a tall person! </span>
-    )
-  }
-  return (
-    <span> This is NOT a tall person. </span>
-  )
-}
-
-render() {
-  ...
-
-  return(
-    <ScatterPlot data={data}
-      tooltip tooltipContents={this.fillTooltip}/>
-  )
-}
-```
+color={colors} | color={colorMe}   
+:-------------------------:|:-------------------------:
+![ScreenshotColorArray](https://github.com/replot/replot-scatter/raw/master/img/color_array.png) | ![ScreenshotColorFunction](https://github.com/replot/replot-scatter/raw/master/img/color_func.png)
 
 ### Graph Style
-The ScatterPlot draws a trendline for the data by default. This can be disabled
-by passing in a `showTrendline` prop with a value of `false`.
+Users can customize the style of graph elements by passing in the prop(s) below:
 
-The ScatterPlot also offers some customization with regards to the actual graph elements.
-These can be controlled with a `graphStyle` prop that is passed in as a javascript
-object. Keys to include can be the following:
-
-* trendlineColor
+* `showTrendline`: defaults to `true`, controls display of the trendline
+* `trendlineColor`
 	* Determines the color of the drawn trendline
-	* Defaults to `#C4C4C4`
+	* Defaults to `#AAA`
 	* Accepts any color string
-* trendlineWidth
+* `trendlineWidth`
 	* Determines the width of the drawn trendline
 	* Defaults to `1.5`
 	* Accepts any number
-* trendlineOpacity
+* `trendlineOpacity`
 	* Determines the opacity of the drawn trendline
-	* Defaults to 1
+	* Defaults to `1`
 	* Accepts any number
 
-### Axis Customization
-Replot ScatterPlots allow for incredible customization of the graph axis. A complete
-explanation of axis customization can be found below -:
-
-#### Titles
-By default, the ScatterPlot does not display any axis titles. If the user wishes to
-include titles, they can pass in some or all of the `xTitle`, `yTitle`, and
-`graphTitle` props. These props accept a string value, displayed at the appropriate
-location on the graph. To compensate for the inclusion of a title, the graph content
-will be pushed further in, but overall the size of the component will remain what
-was specified by the user.
-
-#### Showing/Hiding Axis Elements
-By default, the ScatterPlot shows the entirety of the axes, including lines, labels,
-and gridlines. These can each individually be disabled by passing in boolean
-values of false to the following props:
-- showXAxisLine
-- showYAxisLine
-- showXLabels
-- showYLabels
-- showGrid
-- showLegend
-
-#### Styling the axis
-In addition to enabling/disabling titles and axis components, the actual style of
-the components can be altered as well, with the use of one `axisStyle` prop that
-takes the form of a JavaScript object.
-
-Explanations and defaults follow:
-
-* axisColor
-  * modifies the color of the axis line
-  * defaults to `#000000`
-  * accepts any color string
-* labelColor
-  * modifies the color of both axis labels
-  * defaults to `#000000`
-  * accepts any color string
-* titleColor
-  * modifies the color of all graph titles
-  * defaults to `#000000`
-  * accepts any color string
-* labelColor
-  * modifies the color of axis gridlines
-  * defaults to `#DDDDDD`
-  * accepts any color string
-* lineWidth
-  * modifies the thickness of axis lines
-  * defaults to `2`
-  * accepts any number
-* lineOpacity
-  * modifies the opacity of axis lines
-  * defaults to `1`
-  * accepts any number
-
-Example of using the axisStyle prop:
-
 ```javascript
-let style = {
-    axisColor: "#f17e33",
-    labelColor: "blue",
-    titleColor: "#000000",
-    gridColor: "#DDDDDD",
-    lineWidth: 5,
-    lineOpacity: .5
-  }
-
 render() {
-  ...
-
   return(
-    <ScatterPlot data={data} axisStyle={style}/>
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+    	showTrendline={true}
+	trendlineColor="#ff0000"
+	trendlineWidth={3}
+	trendlineOpacity={0.5}
+    />
   )
 }
 ```
 
-#### Styling the legend
-The ScatterPlot will include a legend by default if a `groupKey` is included.
-If not disabled, the legend can be customized through a single `legendStyle` prop that takes the form of a JavaScript object.
+ Default                   | Custom Trendline | showTrendline={false}        
+:-------------------------:|:-------------------------:|:-------------------------:
+![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png) | ![ScreenshotGraphStyle](https://github.com/replot/replot-scatter/raw/master/img/graph_style.png) | ![ScreenshotTrendlineHidden](https://github.com/replot/replot-scatter/raw/master/img/hide_trendline.png)
 
-Explanations and defaults follow:
-* fontColor
+### Axis Customization
+Replot ScatterPlots allow for incredible customization of the graph axis. A complete
+explanation of axis customization can be found below:
+
+#### Titles
+Title props accept strings to display in the appropriate location on the graph. To compensate for the inclusion of a title, graph content will be condensed, but the overall size of the component will stay constant.
+
+- `graphTitle`: string displayed above the graph
+- `xTitle`: string displayed left of the x-axis
+- `yTitle`: string displayed under the y-axis
+
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+      graphTitle="Shoe Size by Height and Weight"
+      xTitle="Height"
+      yTitle="Weight"
+    />
+  )
+}
+```
+
+Default | Custom titles
+:-------------------------:|:-------------------------:
+![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png) | ![ScreenshotGraphTitles](https://github.com/replot/replot-scatter/raw/master/img/graph_titles.png)
+
+#### Displaying Axis Elements
+Users can customize the display of the lines, labels, and gridlines of the axes.
+
+- `showXAxisLine`: defaults to `true`, controls display of the x-axis line
+- `showYAxisLine`: defaults to `true`, controls display of the y-axis line
+- `showXLabels`: defaults to `true`, controls display of labels on the x-axis
+- `showYLabels`: defaults to `true`, controls display of labels on the y-axis
+- `showGrid`: defaults to `true`, controls display of gridlines
+
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+      	showXAxisLine={false}
+	showYAxisLine={false}
+	showXLabels={false}
+	showYLabels={false}
+	showGrid={false}
+    />
+  )
+}
+```
+
+Lines hidden | Labels hidden
+:-------------------------:|:-------------------------:
+![ScreenshotLinesHidden](https://github.com/replot/replot-scatter/raw/master/img/lines_hidden.png) | ![ScreenshotLabelsHidden](https://github.com/replot/replot-scatter/raw/master/img/labels_hidden.png)
+
+#### Axis Scale
+Users can control the x and y scales of the graph, linear or logarithmic.
+
+- `xScale`: defaults to `"lin"` for linear scale, can be `"log"` for logarithmic scale
+- `yScale`: defaults to `"lin"` for linear scale, can be `"log"` for logarithmic scale
+
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+    	xScale="log"
+      	yScale="log"
+    />
+  )
+}
+```
+
+Default | xScale="log" yScale="log"
+:-------------------------:|:-------------------------:
+![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png) | ![ScreenshotScaleLog](https://github.com/replot/replot-scatter/raw/master/img/scale_log.png)
+
+#### Axis Style
+Users can customize the axis style by passing in the prop(s) below:
+
+* `axisColor`
+  * modifies the color of axis lines
+  * defaults to `"#AAA"`
+  * accepts any color string
+* `tickColor`
+  * modifies the color of axis ticks
+  * defaults to `"#AAA"`
+  * accepts any color string
+* `gridColor`
+  * modifies the color of axis gridlines
+  * defaults to `"#AAA"`
+  * accepts any color string
+* `labelColor`
+  * modifies the color of both axis labels
+  * defaults to `"#AAA"`
+  * accepts any color string
+* `graphTitleColor`
+  * modifies the color of all graph titles
+  * defaults to `"#AAA"`
+  * accepts any color string
+
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+      	axisColor="#ff0000"
+	tickColor="#ff0000"
+	gridColor="#ff0000"
+	labelColor="#ff0000"
+	graphTitleColor="#ff0000"
+    />
+  )
+}
+```
+
+* ``axisWidth``
+  * modifies the thickness of axis lines
+  * defaults to `1.5`
+  * accepts any number
+* ``tickWidth``
+  * modifies the thickness of axis ticks
+  * defaults to `1.5`
+  * accepts any number
+* ``gridWidth``
+  * modifies the thickness of axis gridlines
+  * defaults to `1`
+  * accepts any number
+  
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+      	axisWidth={5}
+	tickWidth={5}
+	gridWidth={5}
+    />
+  )
+}
+```
+  
+* `axisOpacity`
+  * modifies the opacity of axis lines
+  * defaults to `1`
+  * accepts any number
+* `tickOpacity`
+  * modifies the opacity of axis ticks
+  * defaults to `1`
+  * accepts any number
+* `gridOpacity`
+  * modifies the opacity of axis gridlines
+  * defaults to `0.5`
+  * accepts any number
+
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+      	axisOpacity={0.2}
+	tickOpacity={0.2}
+	gridOpacity={0.2}
+    />
+  )
+}
+```
+
+ Custom colors             | Custom widths             | Custom opacities        
+:-------------------------:|:-------------------------:|:-------------------------:
+![ScreenshotAxisColors](https://github.com/replot/replot-scatter/raw/master/img/axis_colors.png) | ![ScreenshotAxisWidths](https://github.com/replot/replot-scatter/raw/master/img/axis_widths.png) | ![ScreenshotAxisOpacities](https://github.com/replot/replot-scatter/raw/master/img/axis_opacities.png)
+
+* `labelFontSize`
+  * sets the font size of both axis labels
+  * automatically calculated when unspecified
+  * accepts any number
+* `graphTitleFontSize`
+  * sets the font size of all graph titles
+  * automatically calculated when unspecified
+  * accepts any number
+
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+        labelFontSize={8}
+    	graphTitleFontSize={10}
+    />
+  )
+}
+```
+
+* ``labelFontFamily``
+  * sets the font family of both axis labels
+  * inherits when unspecified
+  * accepts any font family name string
+* ``graphTitleFontFamily``
+  * sets the font family of all graph titles
+  * inherits when unspecified
+  * accepts any font family name string
+
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+	labelFontFamily="Courier"
+	graphTitleFontFamily="Courier"
+    />
+  )
+}
+```
+
+ Custom font sizes | Custom font families
+:-------------------------:|:-------------------------:
+![ScreenshotAxisFontSizes](https://github.com/replot/replot-scatter/raw/master/img/axis_font_sizes.png) | ![ScreenshotAxisFontFamilies](https://github.com/replot/replot-scatter/raw/master/img/axis_font_families.png)
+
+### Legend Customization
+Users can customize the graph legend in several ways.
+
+- `showLegend`: defaults to `true`, controls display of the legend
+
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+	showLegend={false}
+    />
+  )
+}
+```
+
+ Default | showLegend={false}
+:-------------------------:|:-------------------------:
+![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png) | ![ScreenshotLegendHidden](https://github.com/replot/replot-scatter/raw/master/img/legend_hidden.png)
+
+#### Legend Style
+Users can customize the legend style by passing in the prop(s) below:
+
+* `legendFontColor`
 	* Modifies the color of the font used in the legend
-	* Defaults to `"#000000"`
+	* Defaults to `"#AAA"`
 	* Accepts any color string
-* backgroundColor
+* `legendBackground`
 	* Modifies the background color of the legend
 	* Defaults to `"none"`
 	* Accepts any color string
-* showBorder
+* `legendShowBorder`
  	* Determines whether a border will be drawn around the legend
-	* Defaults to `true`
+	* Defaults to `false`
 	* Accepts `true` or `false`
-* borderColor
+* `legendBorderColor`
 	* Modifies the color of the border of the legend
-	* Defaults to `"#000000"`
+	* Defaults to `"#AAA"`
 	* Accepts any color string
+	
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+	legendFontColor="#ff0000"
+	legendBackground="#ffffff"
+	legendShowBorder={true}
+	legendBorderColor="#ff0000"
+    />
+  )
+}
+```
 
-### Initial Animation
-Initial animation is enabled by default, resulting in the ScatterPlot points growing out
-from the trendline. This can be disabled using the
-`initialAnimation` prop, passing in a value of false.
+ Default | Custom Style
+:-------------------------:|:-------------------------:
+![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png) | ![ScreenshotLegendStyle](https://github.com/replot/replot-scatter/raw/master/img/legend_style.png)
+
+### Tooltip
+Tooltips can display more specific information about a data series.
+
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+	tooltip={false}
+	tooltipColor="light"
+    />
+  )
+}
+```
+
+- `tooltip` defaults to `true`, `false` turns the tooltip off
+- `tooltipColor` defaults to `dark`, it can be set to `light` or `dark`
+
+ Default tooltip             | tooltipColor="light"          | tooltip={false}   
+:-------------------------:|:-------------------------:|:-------------------------:
+![ScreenshotTooltipDefault](https://github.com/replot/replot-scatter/raw/master/img/tooltip_dark.png) | ![ScreenshotTooltipLight](https://github.com/replot/replot-scatter/raw/master/img/tooltip_light.png) | ![ScreenshotTooltipHidden](https://github.com/replot/replot-scatter/raw/master/img/default.png)
+
+#### Customizing Tooltip contents
+Users can customize what is displayed inside the tooltip with a function. Expected arguments to the function are the data for the specific point hovered over. The function should return JSX.
+
+```javascript
+let fillTooltip = (pointData) => {
+  return(
+    <span>The data for this point looks like {JSON.stringify(pointData)}</span>
+  )
+}
+
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+	tooltipContents={fillTooltip}
+    />
+  )
+}
+```
+
+![ScreenshotTooltipCustom](https://github.com/replot/replot-scatter/raw/master/img/tooltip_custom.png)
+
+### Animation Customization
+Users can control the initial animation of the graph, points growing out from the trendline.
+
+- `initialAnimation`: defaults to `true`, controls the animation
