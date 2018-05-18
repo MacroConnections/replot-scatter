@@ -56,6 +56,8 @@ render() {
 - `xKey` defaults to `"x"`
 - `yKey` defaults to `"y"`
 
+![ScreenshotScatterBasic](https://github.com/replot/replot-scatter/raw/master/img/basic.png)
+
 ### Advanced Usage - Groups and Weights
 Replot ScatterPlots support displaying multiple distibutions of points. If a
 `groupKey` prop is included, the points on the ScatterPlot will be colored
@@ -98,6 +100,8 @@ render() {
   )
 }
 ```
+
+![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png)
 
 ### Dimensions
 Dimensions may be specified by passing in `width` and `height` props with numbers 
