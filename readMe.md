@@ -517,7 +517,7 @@ Users can customize what is displayed inside the tooltip with a function. Expect
 ```javascript
 let fillTooltip = (pointData) => {
   return(
-    <span>The data for this point looks like {JSON.stringify(pointData)}</span>
+    <span>The gender for this point is {pointData.gender}</span>
   )
 }
 
