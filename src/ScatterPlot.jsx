@@ -347,6 +347,8 @@ class ScatterPlot extends React.Component {
     }
     let legendStyle = {
       fontColor: this.props.legendFontColor,
+      fontSize: this.props.legendFontSize,
+      fontFamily: this.props.legendFontFamily,
       backgroundColor: this.props.legendBackground,
       showBorder: this.props.legendShowBorder,
       borderColor: this.props.legendBorderColor,
@@ -489,14 +491,16 @@ ScatterPlot.propTypes = {
 
   labelColor: PropTypes.string,
   labelFontSize: PropTypes.number,
-  labelFontType: PropTypes.number,
+  labelFontFamily: PropTypes.number,
 
   graphTitleColor: PropTypes.string,
   graphTitleFontSize: PropTypes.number,
-  graphTitleFontType: PropTypes.number,
+  graphTitleFontFamily: PropTypes.number,
 
   showLegend: PropTypes.bool,
   legendFontColor: PropTypes.string,
+  legendFontSize: PropTypes.string,
+  legendFontFamily: PropTypes.string,
   legendBackground: PropTypes.string,
   legendShowBorder: PropTypes.bool,
   legendBorderColor: PropTypes.string,
