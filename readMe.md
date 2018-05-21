@@ -1,4 +1,4 @@
-# Scatter Plots for react
+# replot-scatter: Scatter charts for react
 Intelligent and customizable scatter plot components for react.
 
 ## Installation

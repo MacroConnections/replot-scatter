@@ -207,9 +207,9 @@ class SeriesContainer extends React.Component {
               y1={style.y1}
               x2={style.x2}
               y2={style.y2}
-              stroke={this.props.style.trendlineColor}
-              strokeWidth={this.props.style.trendlineWidth}
-              opacity={this.props.style.trendlineOpacity}
+              stroke={this.props.trendlineColor}
+              strokeWidth={this.props.trendlineWidth}
+              opacity={this.props.trendlineOpacity}
               />
           }
         </Motion>
@@ -330,8 +330,8 @@ class ScatterPlot extends React.Component {
     let graph
     let axisStyle = {
       titleColor: this.props.graphTitleColor,
-      titleFontSize: this.props.titleFontSize,
-      titleFontFamily: this.props.titleFontFamily,
+      titleFontSize: this.props.graphTitleFontSize,
+      titleFontFamily: this.props.graphTitleFontFamily,
       labelColor: this.props.labelColor,
       labelFontSize: this.props.labelFontSize,
       labelFontFamily: this.props.labelFontFamily,
@@ -347,6 +347,8 @@ class ScatterPlot extends React.Component {
     }
     let legendStyle = {
       fontColor: this.props.legendFontColor,
+      fontSize: this.props.legendFontSize,
+      fontFamily: this.props.legendFontFamily,
       backgroundColor: this.props.legendBackground,
       showBorder: this.props.legendShowBorder,
       borderColor: this.props.legendBorderColor,
@@ -435,6 +437,7 @@ ScatterPlot.defaultProps = {
   trendlineOpacity: 1,
   legendBackgound: "none",
   legendShowBorder: false,
+  tooltip:true,
   initialAnimation: true
 }
 
@@ -488,14 +491,16 @@ ScatterPlot.propTypes = {
 
   labelColor: PropTypes.string,
   labelFontSize: PropTypes.number,
-  labelFontType: PropTypes.number,
+  labelFontFamily: PropTypes.number,
 
   graphTitleColor: PropTypes.string,
   graphTitleFontSize: PropTypes.number,
-  graphTitleFontType: PropTypes.number,
+  graphTitleFontFamily: PropTypes.number,
 
   showLegend: PropTypes.bool,
   legendFontColor: PropTypes.string,
+  legendFontSize: PropTypes.string,
+  legendFontFamily: PropTypes.string,
   legendBackground: PropTypes.string,
   legendShowBorder: PropTypes.bool,
   legendBorderColor: PropTypes.string,
