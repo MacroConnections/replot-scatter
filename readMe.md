@@ -490,6 +490,30 @@ render() {
 :-------------------------:|:-------------------------:
 ![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png) | ![ScreenshotLegendStyle](https://github.com/replot/replot-scatter/raw/master/img/legend_style.png)
 
+* `legendFontSize`
+  * sets the font size of legend texts
+  * automatically calculated when unspecified
+  * accepts any number
+* `legendFontFamily`
+  * sets the font family of legend texts
+  * inherits when unspecified
+  * accepts any font family name string
+
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+  legendFontSize={10}
+  legendFontFamily="Courier"
+    />
+  )
+}
+```
+
+ Default                   | legendFontSize={10}       | legendFontFamily="Courier"
+:-------------------------:|:-------------------------:|:-------------------------:
+![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png) | ![ScreenshotLegendFontSize](https://github.com/replot/replot-scatter/raw/master/img/legend_font_size.png) | ![ScreenshotLegendFontFamily](https://github.com/replot/replot-scatter/raw/master/img/legend_font_family.png)
+
 ### Tooltip
 Tooltips can display more specific information about a data series.
 
