@@ -374,6 +374,8 @@ class ScatterPlot extends React.Component {
           groupKey={this.props.groupKey} weightKey={this.props.weightKey}
           minRadius={this.props.minRadius} maxRadius={this.props.maxRadius}
           showTrendline={this.props.showTrendline} color={this.colorPoints.bind(this)}
+          trendlineColor={this.props.trendlineColor} trendlineWidth={this.props.trendlineWidth}
+          trendlineOpacity={this.props.trendlineOpacity}
           style={this.props.graphStyle} initialAnimation={this.props.initialAnimation}
           activateTooltip={this.activateTooltip.bind(this)}
           deactivateTooltip={this.deactivateTooltip.bind(this)} />
@@ -427,7 +429,7 @@ ScatterPlot.defaultProps = {
   showYLabels: true,
   showGrid: true,
   showLegend: true,
-  showTrendline: true,
+  showTrendline: false,
   yScale: "lin",
   yStart: "break",
   xScale: "lin",
