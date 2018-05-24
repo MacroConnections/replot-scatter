@@ -328,6 +328,7 @@ class ScatterPlot extends React.Component {
     }
 
     let graph
+<<<<<<< HEAD
     let axisStyle = {
       titleColor: this.props.graphTitleColor,
       titleFontSize: this.props.graphTitleFontSize,
@@ -353,6 +354,8 @@ class ScatterPlot extends React.Component {
       showBorder: this.props.legendShowBorder,
       borderColor: this.props.legendBorderColor,
     }
+=======
+>>>>>>> update_052118
 
     graph = (
       <Axis key="axis" width={this.props.width} height={this.props.height}
@@ -360,11 +363,22 @@ class ScatterPlot extends React.Component {
         yTitle={this.props.yTitle} showXAxisLine={this.props.showXAxisLine}
         showXLabels={this.props.showXLabels} showYAxisLine={this.props.showYAxisLine}
         showYLabels={this.props.showYLabels} showGrid={this.props.showGrid}
-        axisStyle={axisStyle} minY={minY}
+        minY={minY}
         maxY={maxY+yPadding} ySteps={this.props.ySteps} yScale={this.props.yScale}
         xAxisMode="continuous" minX={minX}
         maxX={maxX+xPadding} xScale={this.props.xScale}
-        legendValues={this.props.groupKey ? this.getLegend() : null} legendStyle={legendStyle}
+        titleColor={this.props.graphTitleColor} titleFontSize={this.props.graphTitleFontSize}
+        titleFontFamily={this.props.graphTitleFontFamily} labelColor={this.props.labelColor}
+        labelFontSize={this.props.labelFontSize} labelFontFamily={this.props.labelFontFamily}
+        axisColor={this.props.axisColor} lineWidth={this.props.axisWidth}
+        lineOpacity={this.props.axisOpacity} gridColor={this.props.gridColor}
+        gridWidth={this.props.gridWidth} gridOpacity={this.props.gridOpacity}
+        tickColor={this.props.tickColor} tickWidth={this.props.tickWidth}
+        tickOpacity={this.props.tickOpacity}
+        legendValues={this.props.groupKey ? this.getLegend() : null}
+        legendFontColor={this.props.legendFontColor} legendFontSize={this.props.legendFontSize}
+        legendFontFamily={this.props.legendFontFamily} legendBackgroundColor={this.props.legendBackground}
+        legendShowBorder={this.props.legendShowBorder} legendBorderColor={this.props.legendBorderColor}
         legendMode={this.props.legendMode} showLegend={this.props.showLegend}>
         <SeriesContainer data={this.props.data} xVals={xVals} minX={minX}
           maxX={maxX+xPadding} yVals={yVals} minY={minY}
@@ -374,6 +388,8 @@ class ScatterPlot extends React.Component {
           groupKey={this.props.groupKey} weightKey={this.props.weightKey}
           minRadius={this.props.minRadius} maxRadius={this.props.maxRadius}
           showTrendline={this.props.showTrendline} color={this.colorPoints.bind(this)}
+          trendlineColor={this.props.trendlineColor} trendlineWidth={this.props.trendlineWidth}
+          trendlineOpacity={this.props.trendlineOpacity}
           style={this.props.graphStyle} initialAnimation={this.props.initialAnimation}
           activateTooltip={this.activateTooltip.bind(this)}
           deactivateTooltip={this.deactivateTooltip.bind(this)} />
@@ -427,7 +443,7 @@ ScatterPlot.defaultProps = {
   showYLabels: true,
   showGrid: true,
   showLegend: true,
-  showTrendline: true,
+  showTrendline: false,
   yScale: "lin",
   yStart: "break",
   xScale: "lin",
@@ -491,6 +507,7 @@ ScatterPlot.propTypes = {
 
   labelColor: PropTypes.string,
   labelFontSize: PropTypes.number,
+<<<<<<< HEAD
   labelFontFamily: PropTypes.number,
 
   graphTitleColor: PropTypes.string,
@@ -500,6 +517,17 @@ ScatterPlot.propTypes = {
   showLegend: PropTypes.bool,
   legendFontColor: PropTypes.string,
   legendFontSize: PropTypes.string,
+=======
+  labelFontFamily: PropTypes.string,
+
+  graphTitleColor: PropTypes.string,
+  graphTitleFontSize: PropTypes.number,
+  graphTitleFontFamily: PropTypes.string,
+
+  showLegend: PropTypes.bool,
+  legendFontColor: PropTypes.string,
+  legendFontSize: PropTypes.number,
+>>>>>>> update_052118
   legendFontFamily: PropTypes.string,
   legendBackground: PropTypes.string,
   legendShowBorder: PropTypes.bool,
