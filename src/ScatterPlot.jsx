@@ -328,34 +328,6 @@ class ScatterPlot extends React.Component {
     }
 
     let graph
-<<<<<<< HEAD
-    let axisStyle = {
-      titleColor: this.props.graphTitleColor,
-      titleFontSize: this.props.graphTitleFontSize,
-      titleFontFamily: this.props.graphTitleFontFamily,
-      labelColor: this.props.labelColor,
-      labelFontSize: this.props.labelFontSize,
-      labelFontFamily: this.props.labelFontFamily,
-      axisColor: this.props.axisColor,
-      lineWidth: this.props.axisWidth,
-      lineOpacity: this.props.axisOpacity,
-      gridColor: this.props.gridColor,
-      gridWidth: this.props.gridWidth,
-      gridOpacity: this.props.gridOpacity,
-      tickColor: this.props.tickColor,
-      tickWidth: this.props.tickWidth,
-      tickOpacity: this.props.tickOpacity,
-    }
-    let legendStyle = {
-      fontColor: this.props.legendFontColor,
-      fontSize: this.props.legendFontSize,
-      fontFamily: this.props.legendFontFamily,
-      backgroundColor: this.props.legendBackground,
-      showBorder: this.props.legendShowBorder,
-      borderColor: this.props.legendBorderColor,
-    }
-=======
->>>>>>> update_052118
 
     graph = (
       <Axis key="axis" width={this.props.width} height={this.props.height}
@@ -507,17 +479,6 @@ ScatterPlot.propTypes = {
 
   labelColor: PropTypes.string,
   labelFontSize: PropTypes.number,
-<<<<<<< HEAD
-  labelFontFamily: PropTypes.number,
-
-  graphTitleColor: PropTypes.string,
-  graphTitleFontSize: PropTypes.number,
-  graphTitleFontFamily: PropTypes.number,
-
-  showLegend: PropTypes.bool,
-  legendFontColor: PropTypes.string,
-  legendFontSize: PropTypes.string,
-=======
   labelFontFamily: PropTypes.string,
 
   graphTitleColor: PropTypes.string,
@@ -527,7 +488,6 @@ ScatterPlot.propTypes = {
   showLegend: PropTypes.bool,
   legendFontColor: PropTypes.string,
   legendFontSize: PropTypes.number,
->>>>>>> update_052118
   legendFontFamily: PropTypes.string,
   legendBackground: PropTypes.string,
   legendShowBorder: PropTypes.bool,
