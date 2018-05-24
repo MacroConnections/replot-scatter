@@ -104,7 +104,7 @@ render() {
 ![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png)
 
 ### Dimensions
-Dimensions may be specified by passing in `width` and `height` props with numbers 
+Dimensions may be specified by passing in `width` and `height` props with numbers
 in the unit of pixels.
 
 ```javascript
@@ -192,7 +192,7 @@ color={colors} | color={colorMe}
 ### Graph Style
 Users can customize the style of graph elements by passing in the prop(s) below:
 
-* `showTrendline`: defaults to `true`, controls display of the trendline
+* `showTrendline`: defaults to `false`, controls display of the trendline
 * `trendlineColor`
 	* Determines the color of the drawn trendline
 	* Defaults to `#AAA`
@@ -219,9 +219,9 @@ render() {
 }
 ```
 
- Default                   | Custom Trendline | showTrendline={false}        
+ Default                   | showTrendline={true} | Custom Trendline
 :-------------------------:|:-------------------------:|:-------------------------:
-![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png) | ![ScreenshotGraphStyle](https://github.com/replot/replot-scatter/raw/master/img/graph_style.png) | ![ScreenshotTrendlineHidden](https://github.com/replot/replot-scatter/raw/master/img/hide_trendline.png)
+![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png) | ![ScreenshotShowTrendline](https://github.com/replot/replot-scatter/raw/master/img/show_trendline.png) | ![ScreenshotCustomTrendline](https://github.com/replot/replot-scatter/raw/master/img/custom_trendline.png)
 
 ### Axis Customization
 Replot ScatterPlots allow for incredible customization of the graph axis. A complete
@@ -348,7 +348,7 @@ render() {
   * modifies the thickness of axis gridlines
   * defaults to `1`
   * accepts any number
-  
+
 ```javascript
 render() {
   return(
@@ -360,7 +360,7 @@ render() {
   )
 }
 ```
-  
+
 * `axisOpacity`
   * modifies the opacity of axis lines
   * defaults to `1`
@@ -472,7 +472,7 @@ Users can customize the legend style by passing in the prop(s) below:
 	* Modifies the color of the border of the legend
 	* Defaults to `"#AAA"`
 	* Accepts any color string
-	
+
 ```javascript
 render() {
   return(
@@ -489,6 +489,30 @@ render() {
  Default | Custom Style
 :-------------------------:|:-------------------------:
 ![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png) | ![ScreenshotLegendStyle](https://github.com/replot/replot-scatter/raw/master/img/legend_style.png)
+
+* `legendFontSize`
+  * sets the font size of legend texts
+  * automatically calculated when unspecified
+  * accepts any number
+* `legendFontFamily`
+  * sets the font family of legend texts
+  * inherits when unspecified
+  * accepts any font family name string
+
+```javascript
+render() {
+  return(
+    <ScatterPlot data={data} xKey="height" yKey="weight" groupKey="gender" weightKey="shoeSize"
+  legendFontSize={10}
+  legendFontFamily="Courier"
+    />
+  )
+}
+```
+
+ Default                   | legendFontSize={10}       | legendFontFamily="Courier"
+:-------------------------:|:-------------------------:|:-------------------------:
+![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png) | ![ScreenshotLegendFontSize](https://github.com/replot/replot-scatter/raw/master/img/legend_font_size.png) | ![ScreenshotLegendFontFamily](https://github.com/replot/replot-scatter/raw/master/img/legend_font_family.png)
 
 ### Tooltip
 Tooltips can display more specific information about a data series.
