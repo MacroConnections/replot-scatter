@@ -14,11 +14,10 @@ modules, use as you would anything else.
 import ScatterPlot from 'replot-scatter'
 ```
 
-## API
+## Quick Start
 replot-scatter is designed to easily create ScatterPlots.
 The only *required* input is proper JSON formatted data.
 
-### Basic Usage
 In the simplest case, just supply data (as a Javascript array) and specify the
 keys associated with the values:
 
@@ -58,7 +57,7 @@ render() {
 
 ![ScreenshotScatterBasic](https://github.com/replot/replot-scatter/raw/master/img/basic.png)
 
-### Advanced Usage - Groups and Weights
+### Groups and Weights
 Replot ScatterPlots support displaying multiple distibutions of points. If a
 `groupKey` prop is included, the points on the ScatterPlot will be colored
 according to their groups.
@@ -102,6 +101,8 @@ render() {
 ```
 
 ![ScreenshotScatterDefault](https://github.com/replot/replot-scatter/raw/master/img/default.png)
+
+## API
 
 ### Dimensions
 Dimensions may be specified by passing in `width` and `height` props with numbers
