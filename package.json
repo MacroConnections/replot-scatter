@@ -42,12 +42,12 @@
     "radium": "^0.21.2",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "replot-core": "git+ssh://git@github.com/MacroConnections/replot-core.git",
-    "replot-helpers": "git+ssh://git@github.com/MacroConnections/replot-helpers.git",
+    "replot-helpers": "^0.2.0",
     "webpack": "^2.2.1"
   },
   "dependencies": {
     "prop-types": "^15.6.0",
-    "react-motion": "^0.5.2"
+    "react-motion": "^0.5.2",
+    "replot-core": "^0.2.1"
   }
 }
